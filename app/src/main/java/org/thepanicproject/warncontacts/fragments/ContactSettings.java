@@ -1,7 +1,8 @@
 package org.thepanicproject.warncontacts.fragments;
 
+import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import org.thepanicproject.warncontacts.constants.WarnConstants;
 
 public class ContactSettings extends Fragment {
     private String contactID;
+    private OnContacSettingsListener mListener;
 
     public ContactSettings() {
         // Required empty public constructor
@@ -32,5 +34,26 @@ public class ContactSettings extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_contact_settings, container, false);
         // (TextView) layout.findViewById();
         return layout;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnContacSettingsListener) {
+            mListener = (OnContacSettingsListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnContacSettingsListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnContacSettingsListener {
+        void onContactSettingsCallback();
     }
 }

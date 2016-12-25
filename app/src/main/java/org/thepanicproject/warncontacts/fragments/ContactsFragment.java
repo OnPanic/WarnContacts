@@ -1,11 +1,11 @@
 package org.thepanicproject.warncontacts.fragments;
 
+import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,12 +16,6 @@ import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.adapters.ContactsAdapter;
 import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnContactListener}
- * interface.
- */
 public class ContactsFragment extends Fragment {
     private ContentResolver mContentResolver;
     private ContactsAdapter mContacts;
@@ -37,14 +31,6 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContentResolver = getContext().getContentResolver();
-        mContacts = new ContactsAdapter(
-                mContentResolver.query(
-                        ContactsContentProvider.CONTENT_URI, mProjection, null, null, null
-                ),
-                mListener);
-        mContactsObserver = new ContactsObserver(new Handler());
-        mContentResolver.registerContentObserver(ContactsContentProvider.CONTENT_URI, true, mContactsObserver);
     }
 
     @Override
@@ -52,13 +38,18 @@ public class ContactsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(mContacts);
-        }
+        Context context = view.getContext();
+        mContentResolver = context.getContentResolver();
+        mContacts = new ContactsAdapter(
+                mContentResolver.query(
+                        ContactsContentProvider.CONTENT_URI, mProjection, null, null, null
+                ),
+                mListener);
+        mContactsObserver = new ContactsObserver(new Handler());
+        mContentResolver.registerContentObserver(ContactsContentProvider.CONTENT_URI, true, mContactsObserver);
+        RecyclerView recyclerView = (RecyclerView) view;
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(mContacts);
 
         return view;
     }
