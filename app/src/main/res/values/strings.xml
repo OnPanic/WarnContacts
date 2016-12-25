@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Warn Contacts</string>
     <string name="action_settings">Settings</string>
+    <string name="send_email">Send e-mail</string>
+    <string name="send_sms">Send SMS</string>
+    <string name="send_location">Send location</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

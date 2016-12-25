@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.thepanicproject.warncontacts.R;
-import org.thepanicproject.warncontacts.fragments.ContactsFragment;
+import org.thepanicproject.warncontacts.fragments.ContactsListFragment;
 
 public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.ViewHolder> {
 
-    private final ContactsFragment.OnContactListener mListener;
+    private final ContactsListFragment.OnContactListener mListener;
 
-    public ContactsAdapter(Cursor cursor, ContactsFragment.OnContactListener listener) {
+    public ContactsAdapter(Cursor cursor, ContactsListFragment.OnContactListener listener) {
         super(cursor);
         mListener = listener;
     }

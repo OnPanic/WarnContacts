@@ -9,22 +9,28 @@
         android:orientation="vertical">
 
         <Switch
-            android:id="@+id/switch4"
+            android:id="@+id/send_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Switch" />
+            android:checked="true"
+            android:padding="15dp"
+            android:text="@string/send_email" />
 
         <Switch
-            android:id="@+id/switch3"
+            android:id="@+id/send_sms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Switch" />
+            android:checked="true"
+            android:padding="15dp"
+            android:text="@string/send_sms" />
 
         <Switch
-            android:id="@+id/switch5"
+            android:id="@+id/send_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Switch" />
+            android:checked="true"
+            android:padding="15dp"
+            android:text="@string/send_location" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,20 +38,20 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/contact_cancel"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="@string/cancel" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/contact_save"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="@string/save" />
         </LinearLayout>
     </LinearLayout>
 

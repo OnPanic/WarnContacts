@@ -16,16 +16,18 @@ import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.adapters.ContactsAdapter;
 import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
-public class ContactsFragment extends Fragment {
+public class ContactsListFragment extends Fragment {
     private ContentResolver mContentResolver;
     private ContactsAdapter mContacts;
     private ContactsObserver mContactsObserver;
     private OnContactListener mListener;
 
     private String[] mProjection = new String[]{
-            ContactsContentProvider.Contact._ID};
+            ContactsContentProvider.Contact._ID,
+            ContactsContentProvider.Contact.CONTACT_ID
+    };
 
-    public ContactsFragment() {
+    public ContactsListFragment() {
     }
 
     @Override
@@ -36,20 +38,19 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_contacts_list, container, false);
+        RecyclerView view = (RecyclerView) inflater.inflate(R.layout.fragment_contacts_list, container, false);
 
-        Context context = view.getContext();
-        mContentResolver = context.getContentResolver();
         mContacts = new ContactsAdapter(
                 mContentResolver.query(
                         ContactsContentProvider.CONTENT_URI, mProjection, null, null, null
                 ),
                 mListener);
+
         mContactsObserver = new ContactsObserver(new Handler());
         mContentResolver.registerContentObserver(ContactsContentProvider.CONTENT_URI, true, mContactsObserver);
-        RecyclerView recyclerView = (RecyclerView) view;
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(mContacts);
+
+        view.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        view.setAdapter(mContacts);
 
         return view;
     }
@@ -57,6 +58,9 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        mContentResolver = context.getContentResolver();
+
         if (context instanceof OnContactListener) {
             mListener = (OnContactListener) context;
         } else {
@@ -69,18 +73,9 @@ public class ContactsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mContentResolver.unregisterContentObserver(mContactsObserver);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnContactListener {
         void onContactListenerCallback(int id);
     }

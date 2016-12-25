@@ -2,6 +2,7 @@ package org.thepanicproject.warncontacts;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,11 +15,12 @@ import android.view.View;
 
 import org.thepanicproject.warncontacts.constants.WarnConstants;
 import org.thepanicproject.warncontacts.fragments.ContactSettings;
-import org.thepanicproject.warncontacts.fragments.ContactsFragment;
+import org.thepanicproject.warncontacts.fragments.ContactsListFragment;
 import org.thepanicproject.warncontacts.fragments.WarnContacsSettingsFragment;
+import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
 public class WarnContacsActivity extends AppCompatActivity implements
-        ContactsFragment.OnContactListener, ContactSettings.OnContacSettingsListener {
+        ContactsListFragment.OnContactListener, ContactSettings.OnContacSettingsListener {
 
     private FragmentManager mFragmentManager;
     private FloatingActionButton mFab;
@@ -37,7 +39,7 @@ public class WarnContacsActivity extends AppCompatActivity implements
         if (savedInstanceState != null) return;
 
         mFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, new ContactsFragment())
+                .replace(R.id.fragment_container, new ContactsListFragment())
                 .commit();
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
@@ -118,12 +120,26 @@ public class WarnContacsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onContactSettingsCallback() {
-        mFab.show();
+    public void onContactListenerCallback(int id) {
+
     }
 
     @Override
-    public void onContactListenerCallback(int id) {
+    public void onContactSaveCallback(String contact_id, Boolean sms, Boolean email, Boolean location) {
+        mFragmentManager.popBackStack();
+        mFab.show();
 
+        ContentValues values = new ContentValues();
+        values.put(ContactsContentProvider.Contact.CONTACT_ID, contact_id);
+        values.put(ContactsContentProvider.Contact.SEND_SMS, sms);
+        values.put(ContactsContentProvider.Contact.SEND_EMAIL, email);
+        values.put(ContactsContentProvider.Contact.SEND_POSITION, location);
+        getContentResolver().insert(ContactsContentProvider.CONTENT_URI, values);
+    }
+
+    @Override
+    public void onContactCancelCallback() {
+        mFragmentManager.popBackStack();
+        mFab.show();
     }
 }

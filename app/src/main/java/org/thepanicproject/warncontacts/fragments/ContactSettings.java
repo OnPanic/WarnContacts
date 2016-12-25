@@ -6,12 +6,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Switch;
 
 import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.constants.WarnConstants;
 
 public class ContactSettings extends Fragment {
     private String contactID;
+    private Switch sms;
+    private Switch email;
+    private Switch location;
     private OnContacSettingsListener mListener;
 
     public ContactSettings() {
@@ -30,9 +35,29 @@ public class ContactSettings extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_contact_settings, container, false);
-        // (TextView) layout.findViewById();
+
+        sms = (Switch) layout.findViewById(R.id.send_sms);
+        email = (Switch) layout.findViewById(R.id.send_email);
+        location = (Switch) layout.findViewById(R.id.send_location);
+
+        Button save = (Button) layout.findViewById(R.id.contact_save);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onContactSaveCallback(
+                        contactID, sms.isChecked(), email.isChecked(), location.isChecked());
+            }
+        });
+
+        Button cancel = (Button) layout.findViewById(R.id.contact_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onContactCancelCallback();
+            }
+        });
+
         return layout;
     }
 
@@ -54,6 +79,8 @@ public class ContactSettings extends Fragment {
     }
 
     public interface OnContacSettingsListener {
-        void onContactSettingsCallback();
+        void onContactSaveCallback(String contact_id, Boolean sms, Boolean email, Boolean location);
+
+        void onContactCancelCallback();
     }
 }
