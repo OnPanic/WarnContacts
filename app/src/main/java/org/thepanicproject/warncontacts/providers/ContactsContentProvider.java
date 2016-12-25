@@ -15,7 +15,7 @@ import org.thepanicproject.warncontacts.database.ContactsDB;
 
 
 public class ContactsContentProvider extends ContentProvider {
-    private static final String AUTH = "llanes.ezquerro.juan.megadldcli.providers";
+    private static final String AUTH = "org.thepanicproject.warncontacts.providers.ContactsContentProvider";
     public static final Uri CONTENT_URI =
             Uri.parse("content://" + AUTH + "/contacts");
     //UriMatcher
@@ -109,9 +109,12 @@ public class ContactsContentProvider extends ContentProvider {
     }
 
     public static final class Contact implements BaseColumns {
-        //Nombres de columnas
-        public static final String NAME = "name";
-        ;
+
+        public static final String CONTACT_ID = "contact_id";
+        public static final String PANIC_MESSAGE = "panic_message";
+        public static final String SEND_EMAIL = "send_email";
+        public static final String SEND_POSITION = "send_position";
+        public static final String SEND_SMS = "send_sms";
 
         private Contact() {
         }

@@ -19,14 +19,14 @@ import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnContactListener}
  * interface.
  */
 public class ContactsFragment extends Fragment {
     private ContentResolver mContentResolver;
     private ContactsAdapter mContacts;
     private ContactsObserver mContactsObserver;
-    private OnListFragmentInteractionListener mListener;
+    private OnContactListener mListener;
 
     private String[] mProjection = new String[]{
             ContactsContentProvider.Contact._ID};
@@ -66,11 +66,11 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnContactListener) {
+            mListener = (OnContactListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnContactListener");
         }
     }
 
@@ -90,9 +90,8 @@ public class ContactsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(int id);
+    public interface OnContactListener {
+        void onContactListenerCallback(int id);
     }
 
     class ContactsObserver extends ContentObserver {

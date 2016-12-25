@@ -8,14 +8,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class ContactsDB extends SQLiteOpenHelper {
 
     public static final String CONTACTS_TABLE_NAME = "contacts";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "warn_contacts";
     private static final String CONTACTS_TABLE_CREATE =
             "CREATE TABLE " + CONTACTS_TABLE_NAME + " (" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "name TEXT, " +
-                    "ip TEXT, " +
-                    "port INTEGER);";
+                    "contact_id INTEGER, " +
+                    "panic_message TEXT, " +
+                    "send_email INTEGER DEFAULT 0, " +
+                    "send_position INTEGER DEFAULT 0, " +
+                    "send_sms INTEGER DEFAULT 0);";
 
     public ContactsDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

@@ -12,9 +12,9 @@ import org.thepanicproject.warncontacts.fragments.ContactsFragment;
 
 public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.ViewHolder> {
 
-    private final ContactsFragment.OnListFragmentInteractionListener mListener;
+    private final ContactsFragment.OnContactListener mListener;
 
-    public ContactsAdapter(Cursor cursor, ContactsFragment.OnListFragmentInteractionListener listener) {
+    public ContactsAdapter(Cursor cursor, ContactsFragment.OnContactListener listener) {
         super(cursor);
         mListener = listener;
     }
@@ -37,7 +37,7 @@ public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.V
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    mListener.onListFragmentInteraction(id);
+                    mListener.onContactListenerCallback(id);
                 }
             }
         }); */
