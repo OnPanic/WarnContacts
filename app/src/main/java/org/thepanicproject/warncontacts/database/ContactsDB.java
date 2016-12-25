@@ -16,6 +16,7 @@ public class ContactsDB extends SQLiteOpenHelper {
                     "contact_id INTEGER, " +
                     "panic_message TEXT, " +
                     "send_email INTEGER DEFAULT 0, " +
+                    "enabled INTEGER DEFAULT 1, " +
                     "send_position INTEGER DEFAULT 0, " +
                     "send_sms INTEGER DEFAULT 0);";
 

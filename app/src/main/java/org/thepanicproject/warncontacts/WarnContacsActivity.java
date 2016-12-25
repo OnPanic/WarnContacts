@@ -1,6 +1,8 @@
 package org.thepanicproject.warncontacts;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -12,11 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.thepanicproject.warncontacts.constants.WarnConstants;
+import org.thepanicproject.warncontacts.fragments.ContactSettings;
 import org.thepanicproject.warncontacts.fragments.ContactsFragment;
 
 public class WarnContacsActivity extends AppCompatActivity implements ContactsFragment.OnContactListener {
     private FragmentManager mFragmentManager;
     private FloatingActionButton mFab;
+    private String newContact = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +79,10 @@ public class WarnContacsActivity extends AppCompatActivity implements ContactsFr
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case WarnConstants.CONTACT_PICKER_RESULT:
-
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri result = data.getData();
+                    newContact = result.getLastPathSegment();
+                }
                 return;
         }
 
@@ -85,5 +92,21 @@ public class WarnContacsActivity extends AppCompatActivity implements ContactsFr
     @Override
     public void onContactListenerCallback(int id) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (newContact != null) {
+            ContactSettings contactSettings = new ContactSettings();
+            Bundle args = new Bundle();
+            args.putString(WarnConstants.CONTACT_ID, newContact);
+            contactSettings.setArguments(args);
+            newContact = null;
+            mFab.hide();
+            mFragmentManager.beginTransaction()
+                    .addToBackStack(null)
+                    .add(R.id.fragment_container, contactSettings).commit();
+        }
     }
 }

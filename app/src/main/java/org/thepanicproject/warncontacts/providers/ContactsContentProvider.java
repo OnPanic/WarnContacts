@@ -115,6 +115,7 @@ public class ContactsContentProvider extends ContentProvider {
         public static final String SEND_EMAIL = "send_email";
         public static final String SEND_POSITION = "send_position";
         public static final String SEND_SMS = "send_sms";
+        public static final String ENABLED = "enabled";
 
         private Contact() {
         }
