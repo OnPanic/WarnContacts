@@ -5,10 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.fragments.ContactsListFragment;
+import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
 public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.ViewHolder> {
 
@@ -28,8 +31,9 @@ public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.V
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, Cursor cursor) {
-        /*final int id = cursor.getInt(cursor.getColumnIndex(ServersContentProvider.Server._ID));;
-         holder.mItem = mValues.get(position);
+        final String contact_uri = cursor.getString(cursor.getColumnIndex(ContactsContentProvider.Contact.CONTACT_URI));
+
+        /* holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
 
@@ -43,21 +47,16 @@ public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.V
         }); */
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        final ImageView mImage;
+        final Switch mActive;
+        final TextView mName;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            mImage = (ImageView) view.findViewById(R.id.contact_image);
+            mActive = (Switch) view.findViewById(R.id.contact_active);
+            mName = (TextView) view.findViewById(R.id.contact_name);
         }
     }
 }

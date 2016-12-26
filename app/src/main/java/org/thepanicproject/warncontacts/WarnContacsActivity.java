@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -24,7 +25,7 @@ public class WarnContacsActivity extends AppCompatActivity implements
 
     private FragmentManager mFragmentManager;
     private FloatingActionButton mFab;
-    private String newContact = null;
+    private Uri newContact = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ public class WarnContacsActivity extends AppCompatActivity implements
         switch (requestCode) {
             case WarnConstants.CONTACT_PICKER_RESULT:
                 if (resultCode == Activity.RESULT_OK) {
-                    newContact = data.getData().getLastPathSegment();
+                    newContact = data.getData();
                 }
                 return;
         }
@@ -96,7 +97,7 @@ public class WarnContacsActivity extends AppCompatActivity implements
         if (newContact != null) {
             ContactSettings contactSettings = new ContactSettings();
             Bundle args = new Bundle();
-            args.putString(WarnConstants.CONTACT_ID, newContact);
+            args.putString(WarnConstants.CONTACT_URI, newContact.toString());
             contactSettings.setArguments(args);
 
             newContact = null;
@@ -125,12 +126,12 @@ public class WarnContacsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onContactSaveCallback(String contact_id, Boolean sms, Boolean email, Boolean location) {
+    public void onContactSaveCallback(String contact_uri, Boolean sms, Boolean email, Boolean location) {
         mFragmentManager.popBackStack();
         mFab.show();
 
         ContentValues values = new ContentValues();
-        values.put(ContactsContentProvider.Contact.CONTACT_ID, contact_id);
+        values.put(ContactsContentProvider.Contact.CONTACT_URI, contact_uri);
         values.put(ContactsContentProvider.Contact.SEND_SMS, sms);
         values.put(ContactsContentProvider.Contact.SEND_EMAIL, email);
         values.put(ContactsContentProvider.Contact.SEND_POSITION, location);

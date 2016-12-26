@@ -13,7 +13,7 @@ public class ContactsDB extends SQLiteOpenHelper {
     private static final String CONTACTS_TABLE_CREATE =
             "CREATE TABLE " + CONTACTS_TABLE_NAME + " (" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "contact_id TEXT, " +
+                    "contact_uri TEXT, " +
                     "send_email INTEGER DEFAULT 0, " +
                     "enabled INTEGER DEFAULT 1, " +
                     "send_position INTEGER DEFAULT 0, " +

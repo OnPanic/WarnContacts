@@ -13,7 +13,7 @@ import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.constants.WarnConstants;
 
 public class ContactSettings extends Fragment {
-    private String contactID;
+    private String contactURI;
     private Switch sms;
     private Switch email;
     private Switch location;
@@ -28,7 +28,7 @@ public class ContactSettings extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            contactID = args.getString(WarnConstants.CONTACT_ID);
+            contactURI = args.getString(WarnConstants.CONTACT_URI);
         }
     }
 
@@ -46,7 +46,7 @@ public class ContactSettings extends Fragment {
             @Override
             public void onClick(View view) {
                 mListener.onContactSaveCallback(
-                        contactID, sms.isChecked(), email.isChecked(), location.isChecked());
+                        contactURI, sms.isChecked(), email.isChecked(), location.isChecked());
             }
         });
 
