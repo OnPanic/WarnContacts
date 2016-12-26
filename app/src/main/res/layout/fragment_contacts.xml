@@ -19,7 +19,6 @@
         android:layout_weight="1"
         android:paddingLeft="10dp"
         android:paddingTop="11dp"
-        android:text="fffffffffff"
         android:textAlignment="textStart"
         android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
