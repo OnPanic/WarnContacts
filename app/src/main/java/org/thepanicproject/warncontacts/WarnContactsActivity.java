@@ -131,7 +131,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
         mFab.show();
 
         ContentValues values = new ContentValues();
-        values.put(ContactsContentProvider.Contact.CONTACT_URI, contact_uri);
+        values.put(ContactsContentProvider.Contact.CONTACT_NAME, contact_uri);
         values.put(ContactsContentProvider.Contact.SEND_SMS, sms);
         values.put(ContactsContentProvider.Contact.SEND_EMAIL, email);
         values.put(ContactsContentProvider.Contact.SEND_POSITION, location);

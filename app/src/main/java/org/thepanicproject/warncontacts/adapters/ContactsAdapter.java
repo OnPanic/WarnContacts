@@ -31,12 +31,10 @@ public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.V
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, Cursor cursor) {
-        final String contact_uri = cursor.getString(cursor.getColumnIndex(ContactsContentProvider.Contact.CONTACT_URI));
+        final String contact_name = cursor.getString(cursor.getColumnIndex(ContactsContentProvider.Contact.CONTACT_NAME));
+        viewHolder.mName.setText(contact_name);
 
-        /* holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
-
+        /*
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,7 +42,8 @@ public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.V
                     mListener.onContactListenerCallback(id);
                 }
             }
-        }); */
+        });
+        */
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

@@ -24,7 +24,7 @@ public class ContactsListFragment extends Fragment {
 
     private String[] mProjection = new String[]{
             ContactsContentProvider.Contact._ID,
-            ContactsContentProvider.Contact.CONTACT_URI
+            ContactsContentProvider.Contact.CONTACT_NAME
     };
 
     public ContactsListFragment() {

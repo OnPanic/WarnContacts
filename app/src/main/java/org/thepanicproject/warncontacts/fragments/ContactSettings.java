@@ -2,7 +2,10 @@ package org.thepanicproject.warncontacts.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,7 @@ import org.thepanicproject.warncontacts.constants.WarnConstants;
 
 public class ContactSettings extends Fragment {
     private String contactURI;
+    private String contactName;
     private Switch sms;
     private Switch email;
     private Switch location;
@@ -41,12 +45,25 @@ public class ContactSettings extends Fragment {
         email = (Switch) layout.findViewById(R.id.send_email);
         location = (Switch) layout.findViewById(R.id.send_location);
 
+        Cursor cursor = getActivity()
+                .getContentResolver()
+                .query(Uri.parse(contactURI), null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+
+            // DISPLAY_NAME = The display name for the contact.
+            // HAS_PHONE_NUMBER =   An indicator of whether this contact has at least one phone number.
+
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+            cursor.close();
+        }
+
         Button save = (Button) layout.findViewById(R.id.contact_save);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.onContactSaveCallback(
-                        contactURI, sms.isChecked(), email.isChecked(), location.isChecked());
+                        contactName, sms.isChecked(), email.isChecked(), location.isChecked());
             }
         });
 
@@ -57,6 +74,7 @@ public class ContactSettings extends Fragment {
                 mListener.onContactCancelCallback();
             }
         });
+
 
         return layout;
     }
@@ -79,7 +97,7 @@ public class ContactSettings extends Fragment {
     }
 
     public interface OnContacSettingsListener {
-        void onContactSaveCallback(String contact_id, Boolean sms, Boolean email, Boolean location);
+        void onContactSaveCallback(String name, Boolean sms, Boolean email, Boolean location);
 
         void onContactCancelCallback();
     }
