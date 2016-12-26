@@ -26,6 +26,14 @@ public class WarnContactsActivity extends AppCompatActivity implements
     private FragmentManager mFragmentManager;
     private FloatingActionButton mFab;
     private Uri newContact = null;
+    private View.OnClickListener fabClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                    ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(contactPickerIntent, WarnConstants.CONTACT_PICKER_RESULT);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +52,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
                 .commit();
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
-                        ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(contactPickerIntent, WarnConstants.CONTACT_PICKER_RESULT);
-            }
-        });
+        mFab.setOnClickListener(fabClick);
     }
 
     @Override
@@ -129,6 +130,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
     public void onContactSaveCallback(String contact_uri, Boolean sms, Boolean email, Boolean location) {
         mFragmentManager.popBackStack();
         mFab.show();
+        mFab.setOnClickListener(fabClick);
 
         ContentValues values = new ContentValues();
         values.put(ContactsContentProvider.Contact.CONTACT_NAME, contact_uri);
@@ -142,5 +144,6 @@ public class WarnContactsActivity extends AppCompatActivity implements
     public void onContactCancelCallback() {
         mFragmentManager.popBackStack();
         mFab.show();
+        mFab.setOnClickListener(fabClick);
     }
 }
