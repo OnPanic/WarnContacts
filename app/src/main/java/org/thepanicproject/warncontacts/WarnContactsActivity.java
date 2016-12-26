@@ -20,7 +20,7 @@ import org.thepanicproject.warncontacts.fragments.ContactsListFragment;
 import org.thepanicproject.warncontacts.fragments.WarnContacsSettingsFragment;
 import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
-public class WarnContacsActivity extends AppCompatActivity implements
+public class WarnContactsActivity extends AppCompatActivity implements
         ContactsListFragment.OnContactListener, ContactSettings.OnContacSettingsListener {
 
     private FragmentManager mFragmentManager;
