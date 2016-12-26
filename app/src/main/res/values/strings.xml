@@ -6,4 +6,7 @@
     <string name="send_location">Send location</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="activate">Activate</string>
+    <string name="please_grant_permissions_for_read_contacts">Please grant permissions for read contacts</string>
+
 </resources>

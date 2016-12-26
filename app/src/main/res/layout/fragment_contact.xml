@@ -19,8 +19,7 @@
         android:layout_weight="1"
         android:paddingLeft="10dp"
         android:paddingTop="11dp"
-        android:textAlignment="textStart"
-        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+        android:textSize="24sp" />
 
     <Switch
         android:id="@+id/contact_active"

@@ -21,9 +21,12 @@ public class ContactsListFragment extends Fragment {
     private ContactsAdapter mContacts;
     private ContactsObserver mContactsObserver;
     private OnContactListener mListener;
+    private Context mCotext;
 
     private String[] mProjection = new String[]{
             ContactsContentProvider.Contact._ID,
+            ContactsContentProvider.Contact.CONTACT_ID,
+            ContactsContentProvider.Contact.ENABLED,
             ContactsContentProvider.Contact.CONTACT_NAME
     };
 
@@ -41,6 +44,7 @@ public class ContactsListFragment extends Fragment {
         RecyclerView view = (RecyclerView) inflater.inflate(R.layout.fragment_contacts_list, container, false);
 
         mContacts = new ContactsAdapter(
+                mCotext,
                 mContentResolver.query(
                         ContactsContentProvider.CONTENT_URI, mProjection, null, null, null
                 ),
@@ -58,13 +62,13 @@ public class ContactsListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        mContentResolver = context.getContentResolver();
+        mCotext = context;
+        mContentResolver = mCotext.getContentResolver();
 
         if (context instanceof OnContactListener) {
-            mListener = (OnContactListener) context;
+            mListener = (OnContactListener) mCotext;
         } else {
-            throw new RuntimeException(context.toString()
+            throw new RuntimeException(mCotext.toString()
                     + " must implement OnContactListener");
         }
     }

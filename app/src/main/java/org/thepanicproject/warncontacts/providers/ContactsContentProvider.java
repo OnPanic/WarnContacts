@@ -110,6 +110,7 @@ public class ContactsContentProvider extends ContentProvider {
 
     public static final class Contact implements BaseColumns {
 
+        public static final String CONTACT_ID = "contact_id";
         public static final String CONTACT_NAME = "contact_name";
         public static final String SEND_EMAIL = "send_email";
         public static final String SEND_POSITION = "send_position";

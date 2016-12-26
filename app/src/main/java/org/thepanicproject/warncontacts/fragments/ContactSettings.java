@@ -16,7 +16,7 @@ import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.constants.WarnConstants;
 
 public class ContactSettings extends Fragment {
-    private String contactURI;
+    private Uri contactURI;
     private String contactName;
     private Switch sms;
     private Switch email;
@@ -32,13 +32,14 @@ public class ContactSettings extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            contactURI = args.getString(WarnConstants.CONTACT_URI);
+            contactURI = Uri.parse(args.getString(WarnConstants.CONTACT_URI));
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View layout = inflater.inflate(R.layout.fragment_contact_settings, container, false);
 
         sms = (Switch) layout.findViewById(R.id.send_sms);
@@ -47,7 +48,7 @@ public class ContactSettings extends Fragment {
 
         Cursor cursor = getActivity()
                 .getContentResolver()
-                .query(Uri.parse(contactURI), null, null, null, null);
+                .query(contactURI, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
 
@@ -63,7 +64,7 @@ public class ContactSettings extends Fragment {
             @Override
             public void onClick(View view) {
                 mListener.onContactSaveCallback(
-                        contactName, sms.isChecked(), email.isChecked(), location.isChecked());
+                        contactURI.getLastPathSegment(), contactName, sms.isChecked(), email.isChecked(), location.isChecked());
             }
         });
 
@@ -97,7 +98,7 @@ public class ContactSettings extends Fragment {
     }
 
     public interface OnContacSettingsListener {
-        void onContactSaveCallback(String name, Boolean sms, Boolean email, Boolean location);
+        void onContactSaveCallback(String contact_id, String name, Boolean sms, Boolean email, Boolean location);
 
         void onContactCancelCallback();
     }

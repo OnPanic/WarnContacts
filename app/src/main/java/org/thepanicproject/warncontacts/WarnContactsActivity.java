@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -18,6 +19,7 @@ import org.thepanicproject.warncontacts.constants.WarnConstants;
 import org.thepanicproject.warncontacts.fragments.ContactSettings;
 import org.thepanicproject.warncontacts.fragments.ContactsListFragment;
 import org.thepanicproject.warncontacts.fragments.WarnContacsSettingsFragment;
+import org.thepanicproject.warncontacts.permissions.PermissionManager;
 import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
 public class WarnContactsActivity extends AppCompatActivity implements
@@ -52,7 +54,30 @@ public class WarnContactsActivity extends AppCompatActivity implements
                 .commit();
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(fabClick);
+
+        if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasReadContactsPermission(this)) {
+            mFab.hide();
+            PermissionManager.requestReadContactsPermissions(this, WarnConstants.REQUEST_READ_CONTACTS);
+        } else {
+            mFab.setOnClickListener(fabClick);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (grantResults.length < 1
+                || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        switch (requestCode) {
+            case WarnConstants.REQUEST_READ_CONTACTS: {
+                mFab.show();
+                mFab.setOnClickListener(fabClick);
+                break;
+            }
+        }
     }
 
     @Override
@@ -127,13 +152,14 @@ public class WarnContactsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onContactSaveCallback(String contact_uri, Boolean sms, Boolean email, Boolean location) {
+    public void onContactSaveCallback(String contact_id, String contact_name, Boolean sms, Boolean email, Boolean location) {
         mFragmentManager.popBackStack();
         mFab.show();
         mFab.setOnClickListener(fabClick);
 
         ContentValues values = new ContentValues();
-        values.put(ContactsContentProvider.Contact.CONTACT_NAME, contact_uri);
+        values.put(ContactsContentProvider.Contact.CONTACT_ID, contact_id);
+        values.put(ContactsContentProvider.Contact.CONTACT_NAME, contact_name);
         values.put(ContactsContentProvider.Contact.SEND_SMS, sms);
         values.put(ContactsContentProvider.Contact.SEND_EMAIL, email);
         values.put(ContactsContentProvider.Contact.SEND_POSITION, location);
