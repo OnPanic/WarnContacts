@@ -1,6 +1,8 @@
 package org.thepanicproject.warncontacts.adapters;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -60,8 +63,19 @@ public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.V
         }
 
         viewHolder.mActive.setChecked(active);
-        viewHolder.mName.setText(contact_name);
+        viewHolder.mActive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                ContentResolver resolver = mContext.getContentResolver();
+                ContentValues fields = new ContentValues();
+                fields.put(ContactsContentProvider.Contact.ENABLED, isChecked);
+                resolver.update(
+                        ContactsContentProvider.CONTENT_URI, fields, "_ID=" + id, null
+                );
+            }
+        });
 
+        viewHolder.mName.setText(contact_name);
         viewHolder.mName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.thepanicproject.warncontacts.constants.WarnConstants;
+import org.thepanicproject.warncontacts.dialogs.ContactActionsDialog;
 import org.thepanicproject.warncontacts.fragments.ContactSettings;
 import org.thepanicproject.warncontacts.fragments.ContactsListFragment;
 import org.thepanicproject.warncontacts.fragments.WarnContacsSettingsFragment;
@@ -148,7 +149,11 @@ public class WarnContactsActivity extends AppCompatActivity implements
 
     @Override
     public void onContactListenerCallback(int id) {
-
+        ContactActionsDialog dialog = new ContactActionsDialog();
+        Bundle arguments = new Bundle();
+        arguments.putInt(ContactsContentProvider.Contact._ID, id);
+        dialog.setArguments(arguments);
+        dialog.show(getSupportFragmentManager(), "ContactActionsDialog");
     }
 
     @Override
