@@ -105,7 +105,10 @@ public class ContactsContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase db = contactsDB.getWritableDatabase();
+        Integer rows = db.update(ContactsDB.CONTACTS_TABLE_NAME, values, selection, selectionArgs);
+        mContext.getContentResolver().notifyChange(CONTENT_URI, null);
+        return rows;
     }
 
     public static final class Contact implements BaseColumns {
