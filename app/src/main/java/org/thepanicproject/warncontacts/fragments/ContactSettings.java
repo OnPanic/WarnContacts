@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.constants.WarnConstants;
+import org.thepanicproject.warncontacts.permissions.PermissionManager;
 
 public class ContactSettings extends Fragment {
     private Uri contactURI;
@@ -22,6 +24,7 @@ public class ContactSettings extends Fragment {
     private Switch email;
     private Switch location;
     private OnContacSettingsListener mListener;
+    private Context mContext;
 
     public ContactSettings() {
         // Required empty public constructor
@@ -45,6 +48,15 @@ public class ContactSettings extends Fragment {
         sms = (Switch) layout.findViewById(R.id.send_sms);
         email = (Switch) layout.findViewById(R.id.send_email);
         location = (Switch) layout.findViewById(R.id.send_location);
+
+        location.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasLocationPermission(mContext)) {
+                    mListener.requestLocationPermissions();
+                }
+            }
+        });
 
         Cursor cursor = getActivity()
                 .getContentResolver()
@@ -97,9 +109,15 @@ public class ContactSettings extends Fragment {
         mListener = null;
     }
 
+    public void onLocationPermissionDenied() {
+        location.setChecked(false);
+    }
+
     public interface OnContacSettingsListener {
         void onContactSaveCallback(String contact_id, String name, Boolean sms, Boolean email, Boolean location);
 
         void onContactCancelCallback();
+
+        void requestLocationPermissions();
     }
 }

@@ -28,6 +28,8 @@ public class WarnContactsActivity extends AppCompatActivity implements
 
     private FragmentManager mFragmentManager;
     private FloatingActionButton mFab;
+    private ContactSettings contactSettings;
+
     private Uri newContact = null;
     private View.OnClickListener fabClick = new View.OnClickListener() {
         @Override
@@ -113,6 +115,11 @@ public class WarnContactsActivity extends AppCompatActivity implements
                     newContact = data.getData();
                 }
                 return;
+            case WarnConstants.REQUEST_LOCATION_PERMISSION:
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    contactSettings.onLocationPermissionDenied();
+                }
+                return;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -122,7 +129,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         if (newContact != null) {
-            ContactSettings contactSettings = new ContactSettings();
+            contactSettings = new ContactSettings();
             Bundle args = new Bundle();
             args.putString(WarnConstants.CONTACT_URI, newContact.toString());
             contactSettings.setArguments(args);
@@ -176,5 +183,10 @@ public class WarnContactsActivity extends AppCompatActivity implements
         mFragmentManager.popBackStack();
         mFab.show();
         mFab.setOnClickListener(fabClick);
+    }
+
+    @Override
+    public void requestLocationPermissions() {
+        PermissionManager.requestLocationPermissions(this, WarnConstants.REQUEST_LOCATION_PERMISSION);
     }
 }

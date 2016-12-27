@@ -11,6 +11,7 @@
     <string name="activate">Activate</string>
     <string name="actions">Actions</string>
     <string name="please_grant_permissions_for_read_contacts">Please grant permissions for read contacts</string>
+    <string name="please_grant_permissions_for_get_location">Please grant permissions for get location</string>
     <string name="confirm_contact_deletion">Confirm contact deletion</string>
 
 </resources>

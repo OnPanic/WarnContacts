@@ -24,6 +24,11 @@ public class PermissionManager {
         return (context.checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED);
     }
 
+    @SuppressLint("NewApi")
+    public static boolean hasLocationPermission(Context context) {
+        return (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+    }
+
     public static void requestReadContactsPermissions(FragmentActivity activity, int action) {
         final int mAction = action;
         final FragmentActivity mActivity = activity;
@@ -44,6 +49,30 @@ public class PermissionManager {
         } else {
             ActivityCompat.requestPermissions(mActivity,
                     new String[]{Manifest.permission.READ_CONTACTS},
+                    mAction);
+        }
+    }
+
+    public static void requestLocationPermissions(FragmentActivity activity, int action) {
+        final int mAction = action;
+        final FragmentActivity mActivity = activity;
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale
+                (mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            Snackbar.make(mActivity.findViewById(android.R.id.content),
+                    R.string.please_grant_permissions_for_get_location,
+                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.activate,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ActivityCompat.requestPermissions(mActivity,
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    mAction);
+                        }
+                    }).show();
+        } else {
+            ActivityCompat.requestPermissions(mActivity,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     mAction);
         }
     }
