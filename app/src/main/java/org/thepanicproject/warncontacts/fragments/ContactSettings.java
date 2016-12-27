@@ -1,6 +1,7 @@
 package org.thepanicproject.warncontacts.fragments;
 
 import android.app.Fragment;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,17 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.Switch;
 
 import org.thepanicproject.warncontacts.R;
+import org.thepanicproject.warncontacts.adapters.PhonesAdapter;
 import org.thepanicproject.warncontacts.constants.WarnConstants;
 
 public class ContactSettings extends Fragment {
+    private Context mContext;
     private Uri contactURI;
     private String contactName;
     private Switch sms;
     private Switch email;
     private Switch location;
+    private ListView lPhones;
     private OnContacSettingsListener mListener;
 
     public ContactSettings() {
@@ -42,6 +47,8 @@ public class ContactSettings extends Fragment {
                              Bundle savedInstanceState) {
 
         View layout = inflater.inflate(R.layout.fragment_contact_settings, container, false);
+
+        lPhones = (ListView) layout.findViewById(R.id.phones);
 
         sms = (Switch) layout.findViewById(R.id.send_sms);
         sms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -70,11 +77,13 @@ public class ContactSettings extends Fragment {
                 .query(contactURI, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-
-            // DISPLAY_NAME = The display name for the contact.
-            // HAS_PHONE_NUMBER =   An indicator of whether this contact has at least one phone number.
-
             contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+            Boolean has_phone = (cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) != 0);
+            if (!has_phone) {
+                sms.setEnabled(false);
+            } else {
+                listPhones();
+            }
             cursor.close();
         }
 
@@ -95,13 +104,13 @@ public class ContactSettings extends Fragment {
             }
         });
 
-
         return layout;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         if (context instanceof OnContacSettingsListener) {
             mListener = (OnContacSettingsListener) context;
         } else {
@@ -122,6 +131,16 @@ public class ContactSettings extends Fragment {
 
     public void onSendSMSPermissionDenied() {
         sms.setChecked(false);
+    }
+
+    private void listPhones() {
+        ContentResolver cr = mContext.getContentResolver();
+        Cursor phones = cr.query(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactURI.getLastPathSegment(),
+                null, null);
+
+        lPhones.setAdapter(new PhonesAdapter(mContext, phones, 0));
     }
 
     public interface OnContacSettingsListener {

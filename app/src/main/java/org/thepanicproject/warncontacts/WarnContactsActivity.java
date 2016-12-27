@@ -68,8 +68,9 @@ public class WarnContactsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+
         switch (requestCode) {
             case WarnConstants.REQUEST_READ_CONTACTS: {
                 if (grantResults.length > 0

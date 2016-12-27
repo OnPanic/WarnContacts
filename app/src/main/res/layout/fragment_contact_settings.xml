@@ -9,10 +9,18 @@
         android:orientation="vertical">
 
         <Switch
+            android:id="@+id/send_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:padding="15dp"
+            android:text="@string/send_location" />
+
+        <Switch
             android:id="@+id/send_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
+            android:checked="false"
             android:padding="15dp"
             android:text="@string/send_email" />
 
@@ -24,13 +32,10 @@
             android:padding="15dp"
             android:text="@string/send_sms" />
 
-        <Switch
-            android:id="@+id/send_location"
+        <ListView
+            android:id="@+id/phones"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:padding="15dp"
-            android:text="@string/send_location" />
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -50,7 +50,6 @@ public class ContactsListFragment extends Fragment {
                 ),
                 mListener);
 
-        mContactsObserver = new ContactsObserver(new Handler());
         mContentResolver.registerContentObserver(ContactsContentProvider.CONTENT_URI, true, mContactsObserver);
 
         view.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -64,6 +63,7 @@ public class ContactsListFragment extends Fragment {
         super.onAttach(context);
         mCotext = context;
         mContentResolver = mCotext.getContentResolver();
+        mContactsObserver = new ContactsObserver(new Handler());
 
         if (context instanceof OnContactListener) {
             mListener = (OnContactListener) mCotext;
