@@ -69,15 +69,23 @@ public class WarnContactsActivity extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
-        if (grantResults.length < 1
-                || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
         switch (requestCode) {
             case WarnConstants.REQUEST_READ_CONTACTS: {
-                mFab.show();
-                mFab.setOnClickListener(fabClick);
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    mFab.show();
+                    mFab.setOnClickListener(fabClick);
+                }
+
+                break;
+            }
+            case WarnConstants.REQUEST_LOCATION_PERMISSION: {
+                if (grantResults.length < 1
+                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    contactSettings.onLocationPermissionDenied();
+                }
+
                 break;
             }
         }
@@ -113,11 +121,6 @@ public class WarnContactsActivity extends AppCompatActivity implements
             case WarnConstants.CONTACT_PICKER_RESULT:
                 if (resultCode == Activity.RESULT_OK) {
                     newContact = data.getData();
-                }
-                return;
-            case WarnConstants.REQUEST_LOCATION_PERMISSION:
-                if (resultCode == Activity.RESULT_CANCELED) {
-                    contactSettings.onLocationPermissionDenied();
                 }
                 return;
         }
@@ -187,6 +190,8 @@ public class WarnContactsActivity extends AppCompatActivity implements
 
     @Override
     public void requestLocationPermissions() {
-        PermissionManager.requestLocationPermissions(this, WarnConstants.REQUEST_LOCATION_PERMISSION);
+        if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasLocationPermission(this)) {
+            PermissionManager.requestLocationPermissions(this, WarnConstants.REQUEST_LOCATION_PERMISSION);
+        }
     }
 }

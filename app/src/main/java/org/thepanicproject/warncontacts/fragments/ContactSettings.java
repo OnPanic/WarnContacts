@@ -15,7 +15,6 @@ import android.widget.Switch;
 
 import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.constants.WarnConstants;
-import org.thepanicproject.warncontacts.permissions.PermissionManager;
 
 public class ContactSettings extends Fragment {
     private Uri contactURI;
@@ -24,7 +23,6 @@ public class ContactSettings extends Fragment {
     private Switch email;
     private Switch location;
     private OnContacSettingsListener mListener;
-    private Context mContext;
 
     public ContactSettings() {
         // Required empty public constructor
@@ -52,7 +50,7 @@ public class ContactSettings extends Fragment {
         location.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasLocationPermission(mContext)) {
+                if (isChecked) {
                     mListener.requestLocationPermissions();
                 }
             }
