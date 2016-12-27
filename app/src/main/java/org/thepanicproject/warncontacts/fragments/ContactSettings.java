@@ -44,9 +44,18 @@ public class ContactSettings extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_contact_settings, container, false);
 
         sms = (Switch) layout.findViewById(R.id.send_sms);
-        email = (Switch) layout.findViewById(R.id.send_email);
-        location = (Switch) layout.findViewById(R.id.send_location);
+        sms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mListener.requestSendSMSPermissions();
+                }
+            }
+        });
 
+        email = (Switch) layout.findViewById(R.id.send_email);
+
+        location = (Switch) layout.findViewById(R.id.send_location);
         location.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -111,11 +120,17 @@ public class ContactSettings extends Fragment {
         location.setChecked(false);
     }
 
+    public void onSendSMSPermissionDenied() {
+        sms.setChecked(false);
+    }
+
     public interface OnContacSettingsListener {
         void onContactSaveCallback(String contact_id, String name, Boolean sms, Boolean email, Boolean location);
 
         void onContactCancelCallback();
 
         void requestLocationPermissions();
+
+        void requestSendSMSPermissions();
     }
 }

@@ -89,6 +89,14 @@ public class WarnContactsActivity extends AppCompatActivity implements
 
                 break;
             }
+            case WarnConstants.REQUEST_SMS_PERMISSION: {
+                if (grantResults.length < 1
+                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    contactSettings.onSendSMSPermissionDenied();
+                }
+
+                break;
+            }
         }
     }
 
@@ -193,6 +201,13 @@ public class WarnContactsActivity extends AppCompatActivity implements
     public void requestLocationPermissions() {
         if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasLocationPermission(this)) {
             PermissionManager.requestLocationPermissions(this, WarnConstants.REQUEST_LOCATION_PERMISSION);
+        }
+    }
+
+    @Override
+    public void requestSendSMSPermissions() {
+        if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasSendSMSPermission(this)) {
+            PermissionManager.requestSendSMSPermissions(this, WarnConstants.REQUEST_SMS_PERMISSION);
         }
     }
 }

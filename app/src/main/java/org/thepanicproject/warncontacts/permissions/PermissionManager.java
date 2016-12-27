@@ -29,6 +29,35 @@ public class PermissionManager {
         return (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
     }
 
+    @SuppressLint("NewApi")
+    public static boolean hasSendSMSPermission(Context context) {
+        return (context.checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED);
+    }
+
+    public static void requestSendSMSPermissions(FragmentActivity activity, int action) {
+        final int mAction = action;
+        final FragmentActivity mActivity = activity;
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale
+                (mActivity, Manifest.permission.SEND_SMS)) {
+            Snackbar.make(mActivity.findViewById(android.R.id.content),
+                    R.string.please_grant_permissions_for_send_sms,
+                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.activate,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ActivityCompat.requestPermissions(mActivity,
+                                    new String[]{Manifest.permission.SEND_SMS},
+                                    mAction);
+                        }
+                    }).show();
+        } else {
+            ActivityCompat.requestPermissions(mActivity,
+                    new String[]{Manifest.permission.SEND_SMS},
+                    mAction);
+        }
+    }
+
     public static void requestReadContactsPermissions(FragmentActivity activity, int action) {
         final int mAction = action;
         final FragmentActivity mActivity = activity;
