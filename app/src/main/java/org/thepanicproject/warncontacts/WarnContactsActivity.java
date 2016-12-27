@@ -30,8 +30,8 @@ public class WarnContactsActivity extends AppCompatActivity implements
     private FragmentManager mFragmentManager;
     private FloatingActionButton mFab;
     private ContactSettings contactSettings;
-
     private Uri newContact = null;
+
     private View.OnClickListener fabClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
