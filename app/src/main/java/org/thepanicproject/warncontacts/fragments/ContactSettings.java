@@ -31,6 +31,7 @@ public class ContactSettings extends Fragment {
     private ListView eMails;
     private OnContacSettingsListener mListener;
     private ContentResolver cr;
+    private Boolean isValid = false;
 
     public ContactSettings() {
         // Required empty public constructor
@@ -46,7 +47,7 @@ public class ContactSettings extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         View layout = inflater.inflate(R.layout.fragment_contact_settings, container, false);
@@ -76,43 +77,16 @@ public class ContactSettings extends Fragment {
             }
         });
 
-        Cursor cursor = cr.query(contactURI, null, null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            // Get Name
-            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-            // Get phone numbers
-            Boolean has_phone = (cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) != 0);
-            if (!has_phone) {
-                sms.setEnabled(false);
-            } else {
-                listPhones();
-            }
-            cursor.close();
-
-            // Get emails
-            Cursor emails = cr.query(
-                    ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-                    null,
-                    ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactURI.getLastPathSegment(),
-                    null,
-                    null
-            );
-
-            if (emails == null || emails.getCount() < 1) {
-                email.setEnabled(false);
-            } else {
-                eMails.setAdapter(new EmailsAdapter(mContext, emails, 0));
-            }
-        }
-
         Button save = (Button) layout.findViewById(R.id.contact_save);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onContactSaveCallback(
-                        contactURI.getLastPathSegment(), contactName, sms.isChecked(), email.isChecked(), location.isChecked());
+                if (isValid) {
+                    mListener.onContactSaveCallback(
+                            contactURI.getLastPathSegment(), contactName, sms.isChecked(), email.isChecked(), location.isChecked());
+                } else {
+                    mListener.onContactCancelCallback();
+                }
             }
         });
 
@@ -123,6 +97,51 @@ public class ContactSettings extends Fragment {
                 mListener.onContactCancelCallback();
             }
         });
+
+        Cursor cursor = cr.query(contactURI, null, null, null, null);
+        if (cursor == null) return layout; // That should never happen
+        cursor.moveToFirst();
+
+        // Get Name
+        contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+
+        // Get phone numbers
+        Boolean has_phone = (cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) != 0);
+        if (has_phone) {
+            sms.setEnabled(true);
+            lPhones.setAdapter(new PhonesAdapter(
+                    mContext,
+                    cr.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactURI.getLastPathSegment(),
+                            null,
+                            null
+                    ),
+                    0
+            ));
+        }
+        cursor.close();
+
+        // Get emails
+        Cursor emails = cr.query(
+                ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                null,
+                ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactURI.getLastPathSegment(),
+                null,
+                null
+        );
+
+        if (emails != null && emails.getCount() > 0) {
+            email.setEnabled(true);
+            eMails.setAdapter(new EmailsAdapter(mContext, emails, 0));
+        }
+
+        // Is a valid contact??
+        isValid = (email.isEnabled() || sms.isEnabled());
+
+        // Enable only if we have a way to send the location
+        location.setEnabled(isValid);
 
         return layout;
     }
@@ -154,20 +173,6 @@ public class ContactSettings extends Fragment {
 
     public void onSendSMSPermissionDenied() {
         sms.setChecked(false);
-    }
-
-    private void listPhones() {
-        lPhones.setAdapter(new PhonesAdapter(
-                mContext,
-                cr.query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactURI.getLastPathSegment(),
-                        null,
-                        null
-                ),
-                0
-        ));
     }
 
     public interface OnContacSettingsListener {
