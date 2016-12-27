@@ -24,6 +24,11 @@
             android:padding="15dp"
             android:text="@string/send_email" />
 
+        <ListView
+            android:id="@+id/emails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <Switch
             android:id="@+id/send_sms"
             android:layout_width="match_parent"
