@@ -5,4 +5,10 @@
         android:persistent="false"
         android:summary="@string/allowed_trigger_app_summary"
         android:title="@string/allowed_trigger_app" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="@string/pref_runned_notification"
+        android:summary="@string/runned_notification_summary"
+        android:title="@string/runned_notification" />
 </PreferenceScreen>

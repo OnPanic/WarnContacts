@@ -17,6 +17,12 @@
     <string name="allowed_trigger_app_summary">Select which app is authorized to send panic alerts</string>
     <string name="allowed_trigger_app">Allowed trigger app</string>
     <string name="none">None</string>
+    <string name="trigger_app">Trigger App</string>
+    <string name="runned_notification_title">Contacts warned</string>
+    <string name="runned_notification_content">Hope you are ok :)</string>
+    <string name="runned_notification">Notify run complete</string>
+    <string name="runned_notification_summary">Shows a notification after a trigger run</string>
 
     <string name="pref_trigger_app" translatable="false">pref_trigger_app</string>
+    <string name="pref_runned_notification" translatable="false">pref_runned_notification</string>
 </resources>
