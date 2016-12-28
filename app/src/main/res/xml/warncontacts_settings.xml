@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <EditTextPreference
-        android:defaultValue="Default value"
-        android:key="edit_text_preference_1"
-        android:selectAllOnFocus="true"
-        android:singleLine="false"
-        android:title="Edit text preference" />
     <Preference
-        android:defaultValue="Default value"
-        android:key="preference_1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="Preference" />
+        android:key="@string/pref_trigger_app"
+        android:persistent="false"
+        android:summary="@string/allowed_trigger_app_summary"
+        android:title="@string/allowed_trigger_app" />
 </PreferenceScreen>

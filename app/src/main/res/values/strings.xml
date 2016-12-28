@@ -14,5 +14,9 @@
     <string name="please_grant_permissions_for_get_location">Please grant permissions for get location</string>
     <string name="please_grant_permissions_for_send_sms">Please grant permissions for send SMS</string>
     <string name="confirm_contact_deletion">Confirm contact deletion</string>
+    <string name="allowed_trigger_app_summary">Select which app is authorized to send panic alerts</string>
+    <string name="allowed_trigger_app">Allowed trigger app</string>
+    <string name="none">None</string>
 
+    <string name="pref_trigger_app" translatable="false">pref_trigger_app</string>
 </resources>
