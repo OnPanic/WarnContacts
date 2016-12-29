@@ -1,10 +1,13 @@
-package org.thepanicproject.warncontacts.activities;
+package org.thepanicproject.warncontacts.fragments;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -18,33 +21,34 @@ import java.util.ArrayList;
 import info.guardianproject.panic.Panic;
 import info.guardianproject.panic.PanicResponder;
 
-public class ConfigureTriggerAppActivity extends AppCompatActivity {
+public class TriggerAppsFragment extends Fragment {
+    private Context mContext;
     private PackageManager pm;
     private ConnectedAppEntry NONE;
     private ArrayList<ConnectedAppEntry> list;
     private ListView apps;
     private int selectedApp = 0;
 
+    public TriggerAppsFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        NONE = new ConnectedAppEntry(mContext, Panic.PACKAGE_NAME_NONE, R.string.none);
+    }
 
-        if (PanicResponder.checkForDisconnectIntent(this)) {
-            finish();
-            return;
-        }
-
-        setContentView(R.layout.activity_configure_trigger_app);
-
-        pm = getPackageManager();
-        apps = (ListView) findViewById(R.id.trigger_apps);
-
-        NONE = new ConnectedAppEntry(this, Panic.PACKAGE_NAME_NONE, R.string.none);
-
-        String packageName = PanicResponder.getTriggerPackageName(getApplicationContext());
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.activity_configure_trigger_app, container, false);
+        apps = (ListView) v.findViewById(R.id.trigger_apps);
+        String packageName = PanicResponder.getTriggerPackageName(mContext);
         if (packageName == null) {
             packageName = NONE.packageName;
-            PanicResponder.setTriggerPackageName(ConfigureTriggerAppActivity.this,
+            PanicResponder.setTriggerPackageName(getActivity(),
                     NONE.packageName);
         }
 
@@ -60,7 +64,7 @@ public class ConfigureTriggerAppActivity extends AppCompatActivity {
             }
         }
 
-        ListAdapter adapter = new ArrayAdapter<ConnectedAppEntry>(ConfigureTriggerAppActivity.this,
+        ListAdapter adapter = new ArrayAdapter<ConnectedAppEntry>(mContext,
                 android.R.layout.simple_list_item_single_choice, android.R.id.text1, list);
 
         apps.setAdapter(adapter);
@@ -70,9 +74,18 @@ public class ConfigureTriggerAppActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ConnectedAppEntry entry = list.get(i);
-                PanicResponder.setTriggerPackageName(ConfigureTriggerAppActivity.this,
+                PanicResponder.setTriggerPackageName(getActivity(),
                         entry.packageName);
             }
         });
+        return v;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+        pm = mContext.getPackageManager();
     }
 }

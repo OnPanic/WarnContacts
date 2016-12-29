@@ -20,12 +20,15 @@ import org.thepanicproject.warncontacts.constants.WarnConstants;
 import org.thepanicproject.warncontacts.dialogs.ContactActionsDialog;
 import org.thepanicproject.warncontacts.fragments.ContactSettings;
 import org.thepanicproject.warncontacts.fragments.ContactsListFragment;
+import org.thepanicproject.warncontacts.fragments.TriggerAppsFragment;
 import org.thepanicproject.warncontacts.fragments.WarnContacsSettingsFragment;
 import org.thepanicproject.warncontacts.permissions.PermissionManager;
 import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
 public class WarnContactsActivity extends AppCompatActivity implements
-        ContactsListFragment.OnContactListener, ContactSettings.OnContacSettingsListener {
+        ContactsListFragment.OnContactListener,
+        ContactSettings.OnContacSettingsListener,
+        WarnContacsSettingsFragment.OnTriggerAppsListener {
 
     private FragmentManager mFragmentManager;
     private FloatingActionButton mFab;
@@ -210,5 +213,13 @@ public class WarnContactsActivity extends AppCompatActivity implements
         if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasSendSMSPermission(this)) {
             PermissionManager.requestSendSMSPermissions(this, WarnConstants.REQUEST_SMS_PERMISSION);
         }
+    }
+
+    @Override
+    public void onTriggerAppsCallback() {
+        mFragmentManager.beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.fragment_container, new TriggerAppsFragment())
+                    .commit();
     }
 }
