@@ -60,12 +60,25 @@ public class ContactSettings extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    lPhones.setVisibility(View.VISIBLE);
                     mListener.requestSendSMSPermissions();
+                } else {
+                    lPhones.setVisibility(View.GONE);
                 }
             }
         });
 
         email = (Switch) layout.findViewById(R.id.send_email);
+        email.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    eMails.setVisibility(View.VISIBLE);
+                } else {
+                    eMails.setVisibility(View.GONE);
+                }
+            }
+        });
 
         location = (Switch) layout.findViewById(R.id.send_location);
         location.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -169,10 +182,13 @@ public class ContactSettings extends Fragment {
 
     public void onLocationPermissionDenied() {
         location.setChecked(false);
+        location.setEnabled(false);
     }
 
     public void onSendSMSPermissionDenied() {
+        lPhones.setVisibility(View.GONE);
         sms.setChecked(false);
+        sms.setEnabled(false);
     }
 
     public interface OnContacSettingsListener {
