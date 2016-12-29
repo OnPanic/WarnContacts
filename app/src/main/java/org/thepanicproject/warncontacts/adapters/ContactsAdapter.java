@@ -37,7 +37,7 @@ public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.V
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.contact, parent, false);
+                .inflate(R.layout.fragment_contact, parent, false);
         return new ViewHolder(view);
     }
 

@@ -50,7 +50,7 @@ public class ContactSettings extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View layout = inflater.inflate(R.layout.contact_settings, container, false);
+        View layout = inflater.inflate(R.layout.fragment_contact_settings, container, false);
 
         lPhones = (ListView) layout.findViewById(R.id.phones);
         eMails = (ListView) layout.findViewById(R.id.emails);
