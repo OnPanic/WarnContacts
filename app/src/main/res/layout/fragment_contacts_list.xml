@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="org.thepanicproject.warncontacts.fragments.ContactsListFragment"
-    tools:listitem="@layout/fragment_contact" />
+    tools:context="org.thepanicproject.warncontacts.fragments.ContactsList"
+    tools:listitem="@layout/contact" />

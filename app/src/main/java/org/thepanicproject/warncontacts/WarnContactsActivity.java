@@ -19,16 +19,16 @@ import android.view.View;
 import org.thepanicproject.warncontacts.constants.WarnConstants;
 import org.thepanicproject.warncontacts.dialogs.ContactActionsDialog;
 import org.thepanicproject.warncontacts.fragments.ContactSettings;
-import org.thepanicproject.warncontacts.fragments.ContactsListFragment;
-import org.thepanicproject.warncontacts.fragments.TriggerAppsFragment;
-import org.thepanicproject.warncontacts.fragments.WarnContacsSettingsFragment;
+import org.thepanicproject.warncontacts.fragments.ContactsList;
+import org.thepanicproject.warncontacts.fragments.TriggerApps;
+import org.thepanicproject.warncontacts.fragments.WarnContacsSettings;
 import org.thepanicproject.warncontacts.permissions.PermissionManager;
 import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
 public class WarnContactsActivity extends AppCompatActivity implements
-        ContactsListFragment.OnContactListener,
+        ContactsList.OnContactListener,
         ContactSettings.OnContacSettingsListener,
-        WarnContacsSettingsFragment.OnTriggerAppsListener {
+        WarnContacsSettings.OnTriggerAppsListener {
 
     private FragmentManager mFragmentManager;
     private FloatingActionButton mFab;
@@ -57,7 +57,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
         if (savedInstanceState != null) return;
 
         mFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, new ContactsListFragment())
+                .replace(R.id.fragment_container, new ContactsList())
                 .commit();
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
@@ -119,7 +119,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
 
             mFragmentManager.beginTransaction()
                     .addToBackStack(null)
-                    .replace(R.id.fragment_container, new WarnContacsSettingsFragment())
+                    .replace(R.id.fragment_container, new WarnContacsSettings())
                     .commit();
 
             return true;
@@ -219,7 +219,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
     public void onTriggerAppsCallback() {
         mFragmentManager.beginTransaction()
                     .addToBackStack(null)
-                    .replace(R.id.fragment_container, new TriggerAppsFragment())
+                    .replace(R.id.fragment_container, new TriggerApps())
                     .commit();
     }
 }

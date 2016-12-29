@@ -17,7 +17,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.thepanicproject.warncontacts.R;
-import org.thepanicproject.warncontacts.fragments.ContactsListFragment;
+import org.thepanicproject.warncontacts.fragments.ContactsList;
 import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
 import java.io.IOException;
@@ -25,10 +25,10 @@ import java.io.InputStream;
 
 public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.ViewHolder> {
 
-    private final ContactsListFragment.OnContactListener mListener;
+    private final ContactsList.OnContactListener mListener;
     private Context mContext;
 
-    public ContactsAdapter(Context context, Cursor cursor, ContactsListFragment.OnContactListener listener) {
+    public ContactsAdapter(Context context, Cursor cursor, ContactsList.OnContactListener listener) {
         super(cursor);
         mContext = context;
         mListener = listener;
@@ -37,7 +37,7 @@ public class ContactsAdapter extends CursorRecyclerViewAdapter<ContactsAdapter.V
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_contact, parent, false);
+                .inflate(R.layout.contact, parent, false);
         return new ViewHolder(view);
     }
 

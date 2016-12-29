@@ -8,10 +8,10 @@ import android.preference.PreferenceFragment;
 
 import org.thepanicproject.warncontacts.R;
 
-public class WarnContacsSettingsFragment extends PreferenceFragment {
+public class WarnContacsSettings extends PreferenceFragment {
     private OnTriggerAppsListener mListener;
 
-    public WarnContacsSettingsFragment() {
+    public WarnContacsSettings() {
         // Required empty public constructor
     }
 

@@ -16,7 +16,7 @@ import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.adapters.ContactsAdapter;
 import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
 
-public class ContactsListFragment extends Fragment {
+public class ContactsList extends Fragment {
     private ContentResolver mContentResolver;
     private ContactsAdapter mContacts;
     private ContactsObserver mContactsObserver;
@@ -30,7 +30,7 @@ public class ContactsListFragment extends Fragment {
             ContactsContentProvider.Contact.CONTACT_NAME
     };
 
-    public ContactsListFragment() {
+    public ContactsList() {
     }
 
     @Override

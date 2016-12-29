@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import info.guardianproject.panic.Panic;
 import info.guardianproject.panic.PanicResponder;
 
-public class TriggerAppsFragment extends Fragment {
+public class TriggerApps extends Fragment {
     private Context mContext;
     private PackageManager pm;
     private ConnectedAppEntry NONE;
@@ -29,7 +29,7 @@ public class TriggerAppsFragment extends Fragment {
     private ListView apps;
     private int selectedApp = 0;
 
-    public TriggerAppsFragment() {
+    public TriggerApps() {
         // Required empty public constructor
     }
 
@@ -43,7 +43,7 @@ public class TriggerAppsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.activity_configure_trigger_app, container, false);
+        View v = inflater.inflate(R.layout.configure_trigger_app, container, false);
         apps = (ListView) v.findViewById(R.id.trigger_apps);
         String packageName = PanicResponder.getTriggerPackageName(mContext);
         if (packageName == null) {
