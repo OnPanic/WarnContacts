@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.thepanicproject.warncontacts">
+    package="org.onpanic.warncontacts">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -44,17 +44,17 @@
 
         <provider
             android:name=".providers.ContactsContentProvider"
-            android:authorities="org.thepanicproject.warncontacts.providers.ContactsContentProvider"
+            android:authorities="org.onpanic.warncontacts.providers.ContactsContentProvider"
             android:exported="false" />
 
         <provider
             android:name=".providers.PhonesContentProvider"
-            android:authorities="org.thepanicproject.warncontacts.providers.PhonesContentProvider"
+            android:authorities="org.onpanic.warncontacts.providers.PhonesContentProvider"
             android:exported="false" />
 
         <provider
             android:name=".providers.EmailsContentProvider"
-            android:authorities="org.thepanicproject.warncontacts.providers.EmailsContentProvider"
+            android:authorities="org.onpanic.warncontacts.providers.EmailsContentProvider"
             android:exported="false" />
 
     </application>
