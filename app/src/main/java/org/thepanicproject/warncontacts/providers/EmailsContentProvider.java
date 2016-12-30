@@ -15,9 +15,9 @@ import org.thepanicproject.warncontacts.database.ContactsDB;
 
 
 public class EmailsContentProvider extends ContentProvider {
-    private static final String AUTH = "org.thepanicproject.warncontacts.providers.PhonesContentProvider";
+    private static final String AUTH = "org.thepanicproject.warncontacts.providers.EmailsContentProvider";
     public static final Uri CONTENT_URI =
-            Uri.parse("content://" + AUTH + "/phones");
+            Uri.parse("content://" + AUTH + "/emails");
     //UriMatcher
     private static final int EMAILS = 1;
     private static final int EMAIL_ID = 2;
@@ -62,7 +62,7 @@ public class EmailsContentProvider extends ContentProvider {
             case EMAILS:
                 return "vnd.android.cursor.dir/vnd.warncontacts.emails";
             case EMAIL_ID:
-                return "vnd.android.cursor.item/vnd.warncontacts.phone";
+                return "vnd.android.cursor.item/vnd.warncontacts.email";
             default:
                 return null;
         }
