@@ -3,6 +3,7 @@ package org.thepanicproject.warncontacts;
 import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import org.thepanicproject.warncontacts.constants.WarnConstants;
 import org.thepanicproject.warncontacts.dialogs.ContactActionsDialog;
 import org.thepanicproject.warncontacts.fragments.ContactSettings;
 import org.thepanicproject.warncontacts.fragments.ContactsList;
+import org.thepanicproject.warncontacts.fragments.LockedByPermissions;
 import org.thepanicproject.warncontacts.fragments.TriggerApps;
 import org.thepanicproject.warncontacts.fragments.WarnContacsSettings;
 import org.thepanicproject.warncontacts.permissions.PermissionManager;
@@ -48,12 +50,12 @@ public class WarnContactsActivity extends AppCompatActivity implements
         // Do not overlapping fragments.
         if (savedInstanceState != null) return;
 
-        mFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, new ContactsList())
-                .commit();
-
         if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasReadContactsPermission(this)) {
             PermissionManager.requestReadContactsPermissions(this, WarnConstants.REQUEST_READ_CONTACTS);
+        } else {
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new ContactsList())
+                    .commit();
         }
     }
 
@@ -63,6 +65,8 @@ public class WarnContactsActivity extends AppCompatActivity implements
 
         switch (requestCode) {
             case WarnConstants.REQUEST_READ_CONTACTS: {
+                FragmentTransaction transaction = mFragmentManager.beginTransaction();
+
                 if (grantResults.length < 1
                         || grantResults[0] == PackageManager.PERMISSION_DENIED) {
 
@@ -81,7 +85,13 @@ public class WarnContactsActivity extends AppCompatActivity implements
                                         }
                                     }
                             ).show();
+
+                    transaction.replace(R.id.fragment_container, new LockedByPermissions());
+                } else {
+                    transaction.replace(R.id.fragment_container, new ContactsList());
                 }
+
+                transaction.commit();
 
                 break;
             }
