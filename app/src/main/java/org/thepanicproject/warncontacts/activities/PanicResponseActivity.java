@@ -17,7 +17,6 @@ import org.thepanicproject.warncontacts.senders.WarnSenders;
 import info.guardianproject.panic.PanicResponder;
 
 public class PanicResponseActivity extends Activity {
-    private SharedPreferences prefs;
     private ContentResolver cr;
     private String message;
 
@@ -46,7 +45,7 @@ public class PanicResponseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         if (PanicResponder.receivedTriggerFromConnectedApp(this)) {
 
