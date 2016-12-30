@@ -14,19 +14,19 @@ import android.support.annotation.Nullable;
 import org.thepanicproject.warncontacts.database.ContactsDB;
 
 
-public class ContactsContentProvider extends ContentProvider {
-    private static final String AUTH = "org.thepanicproject.warncontacts.providers.ContactsContentProvider";
+public class PhonesContentProvider extends ContentProvider {
+    private static final String AUTH = "org.thepanicproject.warncontacts.providers.PhonesContentProvider";
     public static final Uri CONTENT_URI =
-            Uri.parse("content://" + AUTH + "/contacts");
+            Uri.parse("content://" + AUTH + "/phones");
     //UriMatcher
-    private static final int CONTACTS = 1;
-    private static final int CONTACT_ID = 2;
+    private static final int PHONES = 1;
+    private static final int PHONE_ID = 2;
     private static final UriMatcher uriMatcher;
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(AUTH, "contacts", CONTACTS);
-        uriMatcher.addURI(AUTH, "contacts/#", CONTACT_ID);
+        uriMatcher.addURI(AUTH, "phones", PHONES);
+        uriMatcher.addURI(AUTH, "phones/#", PHONE_ID);
     }
 
     private ContactsDB contactsDB;
@@ -43,13 +43,13 @@ public class ContactsContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         String where = selection;
-        if (uriMatcher.match(uri) == CONTACT_ID) {
+        if (uriMatcher.match(uri) == PHONE_ID) {
             where = "_id=" + uri.getLastPathSegment();
         }
 
         SQLiteDatabase db = contactsDB.getReadableDatabase();
 
-        return db.query(ContactsDB.CONTACTS_TABLE_NAME, projection, where,
+        return db.query(ContactsDB.PHONES_TABLE_NAME, projection, where,
                 selectionArgs, null, null, sortOrder);
     }
 
@@ -59,10 +59,10 @@ public class ContactsContentProvider extends ContentProvider {
         int match = uriMatcher.match(uri);
 
         switch (match) {
-            case CONTACTS:
-                return "vnd.android.cursor.dir/vnd.warncontacts.contacts";
-            case CONTACT_ID:
-                return "vnd.android.cursor.item/vnd.warncontacts.contact";
+            case PHONES:
+                return "vnd.android.cursor.dir/vnd.warncontacts.phones";
+            case PHONE_ID:
+                return "vnd.android.cursor.item/vnd.warncontacts.phone";
             default:
                 return null;
         }
@@ -75,7 +75,7 @@ public class ContactsContentProvider extends ContentProvider {
 
         SQLiteDatabase db = contactsDB.getWritableDatabase();
 
-        regId = db.insert(ContactsDB.CONTACTS_TABLE_NAME, null, values);
+        regId = db.insert(ContactsDB.PHONES_TABLE_NAME, null, values);
 
         mContext.getContentResolver().notifyChange(CONTENT_URI, null);
 
@@ -86,13 +86,13 @@ public class ContactsContentProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
 
         String where = selection;
-        if (uriMatcher.match(uri) == CONTACT_ID) {
+        if (uriMatcher.match(uri) == PHONE_ID) {
             where = "_id=" + uri.getLastPathSegment();
         }
 
         SQLiteDatabase db = contactsDB.getWritableDatabase();
 
-        Integer rows = db.delete(ContactsDB.CONTACTS_TABLE_NAME, where, selectionArgs);
+        Integer rows = db.delete(ContactsDB.PHONES_TABLE_NAME, where, selectionArgs);
 
         mContext.getContentResolver().notifyChange(CONTENT_URI, null);
 
@@ -103,21 +103,17 @@ public class ContactsContentProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         SQLiteDatabase db = contactsDB.getWritableDatabase();
-        Integer rows = db.update(ContactsDB.CONTACTS_TABLE_NAME, values, selection, selectionArgs);
+        Integer rows = db.update(ContactsDB.PHONES_TABLE_NAME, values, selection, selectionArgs);
         mContext.getContentResolver().notifyChange(CONTENT_URI, null);
         return rows;
     }
 
-    public static final class Contact implements BaseColumns {
+    public static final class Phone implements BaseColumns {
 
         public static final String CONTACT_ID = "contact_id";
-        public static final String CONTACT_NAME = "contact_name";
-        public static final String SEND_EMAIL = "send_email";
-        public static final String SEND_POSITION = "send_position";
-        public static final String SEND_SMS = "send_sms";
-        public static final String ENABLED = "enabled";
+        public static final String PHONE = "phone";
 
-        private Contact() {
+        private Phone() {
         }
     }
 }
