@@ -15,6 +15,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".WarnContactsActivity"
             android:label="@string/app_name"
@@ -25,6 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.PanicResponseActivity"
             android:noHistory="true"
@@ -35,6 +37,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.ExitActivity"
             android:theme="@android:style/Theme.NoDisplay" />
@@ -43,10 +46,12 @@
             android:name=".providers.ContactsContentProvider"
             android:authorities="org.thepanicproject.warncontacts.providers.ContactsContentProvider"
             android:exported="false" />
+
         <provider
             android:name=".providers.PhonesContentProvider"
             android:authorities="org.thepanicproject.warncontacts.providers.PhonesContentProvider"
             android:exported="false" />
+
         <provider
             android:name=".providers.EmailsContentProvider"
             android:authorities="org.thepanicproject.warncontacts.providers.EmailsContentProvider"

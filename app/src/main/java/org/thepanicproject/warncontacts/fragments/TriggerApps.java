@@ -81,7 +81,6 @@ public class TriggerApps extends Fragment {
         return v;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
