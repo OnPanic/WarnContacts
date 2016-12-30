@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,7 +22,8 @@ public class ContactsList extends Fragment {
     private ContactsAdapter mContacts;
     private ContactsObserver mContactsObserver;
     private OnContactListener mListener;
-    private Context mCotext;
+    private Context mContext;
+    private FloatingActionButton mFab;
 
     private String[] mProjection = new String[]{
             ContactsContentProvider.Contact._ID,
@@ -41,10 +43,19 @@ public class ContactsList extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        RecyclerView view = (RecyclerView) inflater.inflate(R.layout.fragment_contacts_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_contacts_list, container, false);
+        RecyclerView list = (RecyclerView) view.findViewById(R.id.contact_list);
+
+        mFab = (FloatingActionButton) view.findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onFabClickCallback();
+            }
+        });
 
         mContacts = new ContactsAdapter(
-                mCotext,
+                mContext,
                 mContentResolver.query(
                         ContactsContentProvider.CONTENT_URI, mProjection, null, null, null
                 ),
@@ -52,8 +63,8 @@ public class ContactsList extends Fragment {
 
         mContentResolver.registerContentObserver(ContactsContentProvider.CONTENT_URI, true, mContactsObserver);
 
-        view.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        view.setAdapter(mContacts);
+        list.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        list.setAdapter(mContacts);
 
         return view;
     }
@@ -61,14 +72,14 @@ public class ContactsList extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mCotext = context;
-        mContentResolver = mCotext.getContentResolver();
+        mContext = context;
+        mContentResolver = mContext.getContentResolver();
         mContactsObserver = new ContactsObserver(new Handler());
 
         if (context instanceof OnContactListener) {
-            mListener = (OnContactListener) mCotext;
+            mListener = (OnContactListener) mContext;
         } else {
-            throw new RuntimeException(mCotext.toString()
+            throw new RuntimeException(mContext.toString()
                     + " must implement OnContactListener");
         }
     }
@@ -82,6 +93,8 @@ public class ContactsList extends Fragment {
 
     public interface OnContactListener {
         void onContactListenerCallback(int id);
+
+        void onFabClickCallback();
     }
 
     class ContactsObserver extends ContentObserver {

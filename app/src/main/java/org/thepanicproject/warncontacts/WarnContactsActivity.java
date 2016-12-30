@@ -1,5 +1,6 @@
 package org.thepanicproject.warncontacts;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.ContentValues;
@@ -9,7 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -31,18 +33,9 @@ public class WarnContactsActivity extends AppCompatActivity implements
         WarnContacsSettings.OnTriggerAppsListener {
 
     private FragmentManager mFragmentManager;
-    private FloatingActionButton mFab;
     private ContactSettings contactSettings;
     private Uri newContact = null;
 
-    private View.OnClickListener fabClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
-                    ContactsContract.Contacts.CONTENT_URI);
-            startActivityForResult(contactPickerIntent, WarnConstants.CONTACT_PICKER_RESULT);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +53,8 @@ public class WarnContactsActivity extends AppCompatActivity implements
                 .replace(R.id.fragment_container, new ContactsList())
                 .commit();
 
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-
         if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasReadContactsPermission(this)) {
-            mFab.hide();
             PermissionManager.requestReadContactsPermissions(this, WarnConstants.REQUEST_READ_CONTACTS);
-        } else {
-            mFab.setOnClickListener(fabClick);
         }
     }
 
@@ -76,11 +64,24 @@ public class WarnContactsActivity extends AppCompatActivity implements
 
         switch (requestCode) {
             case WarnConstants.REQUEST_READ_CONTACTS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length < 1
+                        || grantResults[0] == PackageManager.PERMISSION_DENIED) {
 
-                    mFab.show();
-                    mFab.setOnClickListener(fabClick);
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            R.string.please_grant_permissions_for_read_contacts,
+                            Snackbar.LENGTH_INDEFINITE)
+                            .setAction(
+                                    R.string.activate,
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ActivityCompat.requestPermissions(WarnContactsActivity.this,
+                                                    new String[]{Manifest.permission.READ_CONTACTS},
+                                                    WarnConstants.REQUEST_READ_CONTACTS);
+                                        }
+                                    }
+                            ).show();
                 }
 
                 break;
@@ -115,8 +116,6 @@ public class WarnContactsActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            mFab.hide();
-
             mFragmentManager.beginTransaction()
                     .addToBackStack(null)
                     .replace(R.id.fragment_container, new WarnContacsSettings())
@@ -151,7 +150,6 @@ public class WarnContactsActivity extends AppCompatActivity implements
             contactSettings.setArguments(args);
 
             newContact = null;
-            mFab.hide();
 
             mFragmentManager.beginTransaction()
                     .addToBackStack(null)
@@ -166,7 +164,6 @@ public class WarnContactsActivity extends AppCompatActivity implements
             super.onBackPressed();
         } else {
             mFragmentManager.popBackStack();
-            mFab.show();
         }
     }
 
@@ -180,10 +177,15 @@ public class WarnContactsActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onFabClickCallback() {
+        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(contactPickerIntent, WarnConstants.CONTACT_PICKER_RESULT);
+    }
+
+    @Override
     public void onContactSaveCallback(String contact_id, String contact_name, Boolean sms, Boolean email, Boolean location) {
         mFragmentManager.popBackStack();
-        mFab.show();
-        mFab.setOnClickListener(fabClick);
 
         ContentValues values = new ContentValues();
         values.put(ContactsContentProvider.Contact.CONTACT_ID, contact_id);
@@ -197,8 +199,6 @@ public class WarnContactsActivity extends AppCompatActivity implements
     @Override
     public void onContactCancelCallback() {
         mFragmentManager.popBackStack();
-        mFab.show();
-        mFab.setOnClickListener(fabClick);
     }
 
     @Override
@@ -218,8 +218,8 @@ public class WarnContactsActivity extends AppCompatActivity implements
     @Override
     public void onTriggerAppsCallback() {
         mFragmentManager.beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.fragment_container, new TriggerApps())
-                    .commit();
+                .addToBackStack(null)
+                .replace(R.id.fragment_container, new TriggerApps())
+                .commit();
     }
 }
