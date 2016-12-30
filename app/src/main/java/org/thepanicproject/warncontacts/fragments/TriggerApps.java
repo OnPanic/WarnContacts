@@ -14,7 +14,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.thepanicproject.warncontacts.R;
-import org.thepanicproject.warncontacts.utils.ConnectedAppEntry;
+import org.thepanicproject.warncontacts.ui.ConnectedAppEntry;
 
 import java.util.ArrayList;
 

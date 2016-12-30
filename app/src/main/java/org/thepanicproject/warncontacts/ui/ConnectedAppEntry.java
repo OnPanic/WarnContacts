@@ -1,4 +1,4 @@
-package org.thepanicproject.warncontacts.utils;
+package org.thepanicproject.warncontacts.ui;
 
 
 import android.content.Context;
