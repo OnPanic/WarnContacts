@@ -22,10 +22,12 @@
     <string name="runned_notification_content">Hope you are ok :)</string>
     <string name="runned_notification">Notify run complete</string>
     <string name="runned_notification_summary">Shows a notification after a trigger run</string>
+    <string name="alert_message">Alert Message</string>
+    <string name="alert_message_summary">The message send to your contacts</string>
+    <string name="alert_message_default">I am in trouble</string>
 
+    <string name="pref_alert_message" translatable="false">pref_alert_message</string>
     <string name="pref_trigger_app" translatable="false">pref_trigger_app</string>
     <string name="pref_runned_notification" translatable="false">pref_runned_notification</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

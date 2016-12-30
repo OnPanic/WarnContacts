@@ -6,6 +6,14 @@
         android:summary="@string/allowed_trigger_app_summary"
         android:title="@string/allowed_trigger_app" />
 
+    <EditTextPreference
+        android:defaultValue="@string/alert_message_default"
+        android:key="@string/alert_message_summary"
+        android:selectAllOnFocus="true"
+        android:singleLine="false"
+        android:summary="@string/alert_message_summary"
+        android:title="@string/alert_message" />
+
     <SwitchPreference
         android:defaultValue="true"
         android:key="@string/pref_runned_notification"
