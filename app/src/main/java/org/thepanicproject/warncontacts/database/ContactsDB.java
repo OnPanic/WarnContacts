@@ -12,6 +12,7 @@ public class ContactsDB extends SQLiteOpenHelper {
     public static final String EMAILS_TABLE_NAME = "emails";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "warn_contacts";
+
     private static final String CONTACTS_TABLE_CREATE =
             "CREATE TABLE " + CONTACTS_TABLE_NAME + " (" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
