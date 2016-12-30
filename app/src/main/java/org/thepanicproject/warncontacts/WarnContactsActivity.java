@@ -3,7 +3,6 @@ package org.thepanicproject.warncontacts;
 import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -184,20 +183,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onContactSaveCallback(String contact_id, String contact_name, Boolean sms, Boolean email, Boolean location) {
-        mFragmentManager.popBackStack();
-
-        ContentValues values = new ContentValues();
-        values.put(ContactsContentProvider.Contact.CONTACT_ID, contact_id);
-        values.put(ContactsContentProvider.Contact.CONTACT_NAME, contact_name);
-        values.put(ContactsContentProvider.Contact.SEND_SMS, sms);
-        values.put(ContactsContentProvider.Contact.SEND_EMAIL, email);
-        values.put(ContactsContentProvider.Contact.SEND_POSITION, location);
-        getContentResolver().insert(ContactsContentProvider.CONTENT_URI, values);
-    }
-
-    @Override
-    public void onContactCancelCallback() {
+    public void onContactFinishCallback() {
         mFragmentManager.popBackStack();
     }
 

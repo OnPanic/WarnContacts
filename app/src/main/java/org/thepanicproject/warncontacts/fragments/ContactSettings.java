@@ -2,6 +2,7 @@ package org.thepanicproject.warncontacts.fragments;
 
 import android.app.Fragment;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,6 +20,11 @@ import org.thepanicproject.warncontacts.R;
 import org.thepanicproject.warncontacts.adapters.EmailsAdapter;
 import org.thepanicproject.warncontacts.adapters.PhonesAdapter;
 import org.thepanicproject.warncontacts.constants.WarnConstants;
+import org.thepanicproject.warncontacts.providers.ContactsContentProvider;
+import org.thepanicproject.warncontacts.providers.EmailsContentProvider;
+import org.thepanicproject.warncontacts.providers.PhonesContentProvider;
+
+import java.util.ArrayList;
 
 public class ContactSettings extends Fragment {
     private Context mContext;
@@ -32,6 +38,62 @@ public class ContactSettings extends Fragment {
     private OnContacSettingsListener mListener;
     private ContentResolver cr;
     private Boolean isValid = false;
+    private EmailsAdapter emailsAdapter;
+    private PhonesAdapter phonesAdapter;
+
+    private View.OnClickListener saveButtonClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            boolean sendSMS = false;
+            boolean sendEmail = false;
+            ArrayList<String> checked_mails;
+            ArrayList<String> checked_phones;
+
+            if (!isValid) mListener.onContactFinishCallback();
+
+            if (sms.isChecked()) {
+                checked_phones = phonesAdapter.getSelectedString();
+
+                if (!checked_phones.isEmpty()) {
+                    for (String phone : checked_phones) {
+                        ContentValues phone_value = new ContentValues();
+                        phone_value.put(PhonesContentProvider.Phone.CONTACT_ID, contactURI.getLastPathSegment());
+                        phone_value.put(PhonesContentProvider.Phone.PHONE, phone);
+                        cr.insert(PhonesContentProvider.CONTENT_URI, phone_value);
+                    }
+
+                    sendSMS = true;
+                }
+            }
+
+            if (email.isChecked()) {
+                checked_mails = emailsAdapter.getSelectedString();
+
+                if (!checked_mails.isEmpty()) {
+                    for (String email : checked_mails) {
+                        ContentValues email_value = new ContentValues();
+                        email_value.put(EmailsContentProvider.Email.CONTACT_ID, contactURI.getLastPathSegment());
+                        email_value.put(EmailsContentProvider.Email.EMAIL, email);
+                        cr.insert(EmailsContentProvider.CONTENT_URI, email_value);
+                    }
+
+                    sendEmail = true;
+                }
+            }
+
+            if ((sendSMS || sendEmail)) {
+                ContentValues contact_table = new ContentValues();
+                contact_table.put(ContactsContentProvider.Contact.CONTACT_ID, contactURI.getLastPathSegment());
+                contact_table.put(ContactsContentProvider.Contact.CONTACT_NAME, contactName);
+                contact_table.put(ContactsContentProvider.Contact.SEND_SMS, sendSMS);
+                contact_table.put(ContactsContentProvider.Contact.SEND_EMAIL, sendEmail);
+                contact_table.put(ContactsContentProvider.Contact.SEND_POSITION, location.isChecked());
+                cr.insert(ContactsContentProvider.CONTENT_URI, contact_table);
+            }
+
+            mListener.onContactFinishCallback();
+        }
+    };
 
     public ContactSettings() {
         // Required empty public constructor
@@ -91,23 +153,13 @@ public class ContactSettings extends Fragment {
         });
 
         Button save = (Button) layout.findViewById(R.id.contact_save);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isValid) {
-                    mListener.onContactSaveCallback(
-                            contactURI.getLastPathSegment(), contactName, sms.isChecked(), email.isChecked(), location.isChecked());
-                } else {
-                    mListener.onContactCancelCallback();
-                }
-            }
-        });
+        save.setOnClickListener(saveButtonClick);
 
         Button cancel = (Button) layout.findViewById(R.id.contact_cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onContactCancelCallback();
+                mListener.onContactFinishCallback();
             }
         });
 
@@ -122,7 +174,8 @@ public class ContactSettings extends Fragment {
         Boolean has_phone = (cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) != 0);
         if (has_phone) {
             sms.setEnabled(true);
-            lPhones.setAdapter(new PhonesAdapter(
+
+            phonesAdapter = new PhonesAdapter(
                     mContext,
                     cr.query(
                             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -132,7 +185,9 @@ public class ContactSettings extends Fragment {
                             null
                     ),
                     0
-            ));
+            );
+
+            lPhones.setAdapter(phonesAdapter);
         }
         cursor.close();
 
@@ -147,7 +202,8 @@ public class ContactSettings extends Fragment {
 
         if (emails != null && emails.getCount() > 0) {
             email.setEnabled(true);
-            eMails.setAdapter(new EmailsAdapter(mContext, emails, 0));
+            emailsAdapter = new EmailsAdapter(mContext, emails, 0);
+            eMails.setAdapter(emailsAdapter);
         }
 
         // Is a valid contact??
@@ -192,9 +248,7 @@ public class ContactSettings extends Fragment {
     }
 
     public interface OnContacSettingsListener {
-        void onContactSaveCallback(String contact_id, String name, Boolean sms, Boolean email, Boolean location);
-
-        void onContactCancelCallback();
+        void onContactFinishCallback();
 
         void requestLocationPermissions();
 
