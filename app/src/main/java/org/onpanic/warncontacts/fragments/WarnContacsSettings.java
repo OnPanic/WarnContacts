@@ -37,7 +37,7 @@ public class WarnContacsSettings extends PreferenceFragment {
             mListener = (OnTriggerAppsListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnContactListener");
+                    + " must implement OnTriggerAppsListener");
         }
     }
 

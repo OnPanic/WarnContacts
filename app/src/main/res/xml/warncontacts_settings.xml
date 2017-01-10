@@ -15,7 +15,7 @@
         android:title="@string/alert_message" />
 
     <SwitchPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="@string/pref_runned_notification"
         android:summary="@string/runned_notification_summary"
         android:title="@string/runned_notification" />
