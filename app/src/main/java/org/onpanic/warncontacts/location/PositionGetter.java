@@ -5,7 +5,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
 public class PositionGetter implements LocationListener {
 
@@ -18,16 +17,7 @@ public class PositionGetter implements LocationListener {
 
     public void get(final PositionHandler positionHandler) {
         this.positionHandler = positionHandler;
-        /*
-        final Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null) {
-            Log.d(getClass().getName(), "Last locations isn't null.");
-            positionHandler.onGet(location);
-            return;
-        }
-        */
 
-        Log.d(getClass().getName(), "Requesting locations updates.");
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
     }
@@ -38,7 +28,7 @@ public class PositionGetter implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(getClass().getName(), "Location changed.");
+
         if (positionHandler != null) {
             positionHandler.onGet(location);
             positionHandler = null;
