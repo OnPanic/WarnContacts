@@ -41,17 +41,13 @@
         <activity
             android:name=".activities.PanicResponseActivity"
             android:noHistory="true"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="info.guardianproject.panic.action.TRIGGER" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activities.ExitActivity"
-            android:theme="@android:style/Theme.NoDisplay" />
 
         <provider
             android:name=".providers.ContactsContentProvider"

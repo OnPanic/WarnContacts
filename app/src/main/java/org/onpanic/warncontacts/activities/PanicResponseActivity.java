@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import org.onpanic.warncontacts.R;
 import org.onpanic.warncontacts.constants.WarnConstants;
+import org.onpanic.warncontacts.location.PositionGetter;
 import org.onpanic.warncontacts.notifications.TriggerNotification;
 import org.onpanic.warncontacts.providers.ContactsContentProvider;
 import org.onpanic.warncontacts.providers.EmailsContentProvider;
@@ -22,6 +22,8 @@ import info.guardianproject.panic.PanicResponder;
 
 public class PanicResponseActivity extends Activity {
     private ContentResolver cr;
+    private SharedPreferences prefs;
+    private String message;
 
     private String[] cProjection = new String[]{
             ContactsContentProvider.Contact._ID,
@@ -48,52 +50,41 @@ public class PanicResponseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        if (PanicResponder.receivedTriggerFromConnectedApp(this)) {
-
-            String message = prefs.getString(
-                    getString(R.string.pref_alert_message),
-                    getString(R.string.alert_message_default));
-
-            cr = getContentResolver();
-
-            Cursor contacts =
-                    cr.query(ContactsContentProvider.CONTENT_URI, cProjection, ContactsContentProvider.Contact.ENABLED + "=1", null, null);
-
-            if (contacts != null && contacts.getCount() > 0) {
-
-                while (contacts.moveToNext()) {
-                    String id = contacts.getString(contacts.getColumnIndex(ContactsContentProvider.Contact.CONTACT_ID));
-
-                    if (contacts.getInt(contacts.getColumnIndex(ContactsContentProvider.Contact.SEND_POSITION)) == 1) {
-                        String location = getLocation();
-
-                        if (location != null)
-                            message += location;
-                    }
-
-                    if (contacts.getInt(contacts.getColumnIndex(ContactsContentProvider.Contact.SEND_SMS)) == 1) {
-                        sendSms(id, message);
-                    }
-
-                    if (contacts.getInt(contacts.getColumnIndex(ContactsContentProvider.Contact.SEND_EMAIL)) == 1) {
-                        sendEmail(id, message);
-                    }
-                }
-
-                contacts.close();
-
-                if (prefs.getBoolean(getString(R.string.pref_runned_notification), true)) {
-                    TriggerNotification notification = new TriggerNotification(getApplicationContext());
-                    notification.show();
-                }
-            }
-
-            ExitActivity.exitAndRemoveFromRecentApps(PanicResponseActivity.this);
+        if (!PanicResponder.receivedTriggerFromConnectedApp(this)) {
+            endRun();
         }
 
-        finish();
+        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        cr = getContentResolver();
+
+        message = prefs.getString(
+                getString(R.string.pref_alert_message),
+                getString(R.string.alert_message_default));
+
+        String where = ContactsContentProvider.Contact.ENABLED + "=1 AND " + ContactsContentProvider.Contact.SEND_POSITION + "=1";
+
+        Cursor requestPosition =
+                cr.query(ContactsContentProvider.CONTENT_URI, cProjection, where, null, null);
+
+        if (requestPosition != null && requestPosition.getCount() > 0) {
+            requestPosition.close();
+            PositionGetter getter = new PositionGetter(this);
+            getter.get(new PositionGetter.PositionHandler() {
+                @Override
+                public void onGet(Location location) {
+                    message += " " + WarnConstants.GOOGLE_MAP_URL
+                            + location.getLatitude()
+                            + "," + location.getLongitude()
+                            + " via " + location.getProvider();
+                    sendPanicAlerts(message);
+                    endRun();
+                }
+            });
+        } else {
+            sendPanicAlerts(message);
+            endRun();
+        }
     }
 
     private void sendSms(String user_id, String message) {
@@ -139,27 +130,42 @@ public class PanicResponseActivity extends Activity {
         }
     }
 
-    public String getLocation() {
-        String locationURL = null;
+    private void sendPanicAlerts(String msg) {
 
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Cursor contacts = cr.query(
+                ContactsContentProvider.CONTENT_URI,
+                cProjection,
+                ContactsContentProvider.Contact.ENABLED + "=1",
+                null, null);
 
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        if (contacts != null && contacts.getCount() > 0) {
 
-        try {
-            String bestProvider = locationManager.getBestProvider(criteria, false);
-            Location location = locationManager.getLastKnownLocation(bestProvider);
+            while (contacts.moveToNext()) {
+                String id = contacts.getString(contacts.getColumnIndex(ContactsContentProvider.Contact.CONTACT_ID));
 
-            locationURL = " " + WarnConstants.GOOGLE_MAP_URL
-                    + location.getLatitude()
-                    + "," + location.getLongitude()
-                    + " via " + location.getProvider();
+                if (contacts.getInt(contacts.getColumnIndex(ContactsContentProvider.Contact.SEND_SMS)) == 1) {
+                    sendSms(id, msg);
+                }
 
-        } catch (SecurityException | NullPointerException e) {
-            e.printStackTrace();
+                if (contacts.getInt(contacts.getColumnIndex(ContactsContentProvider.Contact.SEND_EMAIL)) == 1) {
+                    sendEmail(id, msg);
+                }
+            }
+
+            contacts.close();
+
+            if (prefs.getBoolean(getString(R.string.pref_runned_notification), true)) {
+                TriggerNotification notification = new TriggerNotification(getApplicationContext());
+                notification.show();
+            }
         }
+    }
 
-        return locationURL;
+    private void endRun() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            finishAndRemoveTask();
+        } else {
+            finish();
+        }
     }
 }
