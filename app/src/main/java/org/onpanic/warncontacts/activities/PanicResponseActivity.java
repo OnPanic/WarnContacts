@@ -154,7 +154,7 @@ public class PanicResponseActivity extends Activity {
 
             contacts.close();
 
-            if (prefs.getBoolean(getString(R.string.pref_runned_notification), true)) {
+            if (prefs.getBoolean(getString(R.string.pref_runned_notification), false)) {
                 TriggerNotification notification = new TriggerNotification(getApplicationContext());
                 notification.show();
             }
