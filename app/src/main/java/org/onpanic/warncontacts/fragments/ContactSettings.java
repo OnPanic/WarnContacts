@@ -170,10 +170,6 @@ public class ContactSettings extends Fragment {
         location.setEnabled(false);
     }
 
-    public void onSendSMSPermissionDenied() {
-        mListener.onContactFinishCallback();
-    }
-
     public interface OnContactSettingsListener {
         void onContactFinishCallback();
 

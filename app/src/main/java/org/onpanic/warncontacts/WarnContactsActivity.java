@@ -106,7 +106,9 @@ public class WarnContactsActivity extends AppCompatActivity implements
             case WarnConstants.REQUEST_SMS_PERMISSION: {
                 if (grantResults.length < 1
                         || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    contactSettings.onSendSMSPermissionDenied();
+                    mFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, new LockedByPermissions())
+                            .commit();
                 }
 
                 break;
