@@ -14,7 +14,6 @@ import org.onpanic.warncontacts.constants.WarnConstants;
 import org.onpanic.warncontacts.location.PositionGetter;
 import org.onpanic.warncontacts.notifications.TriggerNotification;
 import org.onpanic.warncontacts.providers.ContactsContentProvider;
-import org.onpanic.warncontacts.providers.EmailsContentProvider;
 import org.onpanic.warncontacts.providers.PhonesContentProvider;
 import org.onpanic.warncontacts.senders.WarnSenders;
 
@@ -29,8 +28,6 @@ public class PanicResponseActivity extends Activity {
             ContactsContentProvider.Contact._ID,
             ContactsContentProvider.Contact.CONTACT_ID,
             ContactsContentProvider.Contact.ENABLED,
-            ContactsContentProvider.Contact.SEND_EMAIL,
-            ContactsContentProvider.Contact.SEND_SMS,
             ContactsContentProvider.Contact.SEND_POSITION
     };
 
@@ -38,12 +35,6 @@ public class PanicResponseActivity extends Activity {
             PhonesContentProvider.Phone._ID,
             PhonesContentProvider.Phone.CONTACT_ID,
             PhonesContentProvider.Phone.PHONE
-    };
-
-    private String[] eProjection = new String[]{
-            EmailsContentProvider.Email._ID,
-            EmailsContentProvider.Email.CONTACT_ID,
-            EmailsContentProvider.Email.EMAIL
     };
 
     @Override
@@ -109,27 +100,6 @@ public class PanicResponseActivity extends Activity {
         }
     }
 
-    private void sendEmail(String user_id, String message) {
-        Cursor cursor = cr.query(
-                EmailsContentProvider.CONTENT_URI,
-                eProjection,
-                EmailsContentProvider.Email.CONTACT_ID + "=" + user_id,
-                null,
-                null
-        );
-
-        if (cursor != null && cursor.getCount() > 0) {
-
-            while (cursor.moveToNext()) {
-                WarnSenders.sendEmail(
-                        cursor.getString(cursor.getColumnIndex(EmailsContentProvider.Email.EMAIL)),
-                        message);
-            }
-
-            cursor.close();
-        }
-    }
-
     private void sendPanicAlerts(String msg) {
 
         Cursor contacts = cr.query(
@@ -142,14 +112,7 @@ public class PanicResponseActivity extends Activity {
 
             while (contacts.moveToNext()) {
                 String id = contacts.getString(contacts.getColumnIndex(ContactsContentProvider.Contact.CONTACT_ID));
-
-                if (contacts.getInt(contacts.getColumnIndex(ContactsContentProvider.Contact.SEND_SMS)) == 1) {
-                    sendSms(id, msg);
-                }
-
-                if (contacts.getInt(contacts.getColumnIndex(ContactsContentProvider.Contact.SEND_EMAIL)) == 1) {
-                    sendEmail(id, msg);
-                }
+                sendSms(id, msg);
             }
 
             contacts.close();

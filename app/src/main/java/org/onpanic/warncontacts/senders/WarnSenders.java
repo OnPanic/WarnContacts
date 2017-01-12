@@ -12,8 +12,4 @@ public class WarnSenders {
             ex.printStackTrace();
         }
     }
-
-    public static void sendEmail(String phoneNo, String msg) {
-        // TODO
-    }
 }

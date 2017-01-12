@@ -30,7 +30,7 @@ import org.onpanic.warncontacts.providers.ContactsContentProvider;
 
 public class WarnContactsActivity extends AppCompatActivity implements
         ContactsList.OnContactListener,
-        ContactSettings.OnContacSettingsListener,
+        ContactSettings.OnContactSettingsListener,
         WarnContacsSettings.OnTriggerAppsListener {
 
     private FragmentManager mFragmentManager;
