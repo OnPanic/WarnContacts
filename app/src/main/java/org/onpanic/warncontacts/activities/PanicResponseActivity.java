@@ -50,39 +50,39 @@ public class PanicResponseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (PanicResponder.receivedTriggerFromConnectedApp(this)) {
+            prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            cr = getContentResolver();
 
-        if (!PanicResponder.receivedTriggerFromConnectedApp(this)) {
-            endRun();
-        }
+            message = prefs.getString(
+                    getString(R.string.pref_alert_message),
+                    getString(R.string.alert_message_default));
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        cr = getContentResolver();
+            String where = ContactsContentProvider.Contact.ENABLED + "=1 AND " + ContactsContentProvider.Contact.SEND_POSITION + "=1";
 
-        message = prefs.getString(
-                getString(R.string.pref_alert_message),
-                getString(R.string.alert_message_default));
+            Cursor requestPosition =
+                    cr.query(ContactsContentProvider.CONTENT_URI, cProjection, where, null, null);
 
-        String where = ContactsContentProvider.Contact.ENABLED + "=1 AND " + ContactsContentProvider.Contact.SEND_POSITION + "=1";
-
-        Cursor requestPosition =
-                cr.query(ContactsContentProvider.CONTENT_URI, cProjection, where, null, null);
-
-        if (requestPosition != null && requestPosition.getCount() > 0) {
-            requestPosition.close();
-            PositionGetter getter = new PositionGetter(this);
-            getter.get(new PositionGetter.PositionHandler() {
-                @Override
-                public void onGet(Location location) {
-                    message += " " + WarnConstants.GOOGLE_MAP_URL
-                            + location.getLatitude()
-                            + "," + location.getLongitude()
-                            + " via " + location.getProvider();
-                    sendPanicAlerts(message);
-                    endRun();
-                }
-            });
+            if (requestPosition != null && requestPosition.getCount() > 0) {
+                requestPosition.close();
+                PositionGetter getter = new PositionGetter(this);
+                getter.get(new PositionGetter.PositionHandler() {
+                    @Override
+                    public void onGet(Location location) {
+                        message += " " + WarnConstants.GOOGLE_MAP_URL
+                                + location.getLatitude()
+                                + "," + location.getLongitude()
+                                + " via " + location.getProvider();
+                        sendPanicAlerts(message);
+                        endRun();
+                    }
+                });
+            } else {
+                sendPanicAlerts(message);
+                endRun();
+            }
         } else {
-            sendPanicAlerts(message);
+            // DO NOTHING
             endRun();
         }
     }
