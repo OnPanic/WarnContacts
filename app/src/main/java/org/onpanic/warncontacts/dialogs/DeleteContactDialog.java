@@ -1,6 +1,7 @@
 package org.onpanic.warncontacts.dialogs;
 
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 
 import org.onpanic.warncontacts.R;
 import org.onpanic.warncontacts.providers.ContactsContentProvider;
+import org.onpanic.warncontacts.providers.PhonesContentProvider;
 
 public class DeleteContactDialog extends DialogFragment {
     @NonNull
@@ -23,10 +25,16 @@ public class DeleteContactDialog extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        // Delete from db
-                        context.getContentResolver().delete(
+                        ContentResolver cr = context.getContentResolver();
+                        cr.delete(
                                 ContactsContentProvider.CONTENT_URI,
                                 ContactsContentProvider.Contact._ID + "=" + arguments.getInt("_id"),
+                                null
+                        );
+
+                        cr.delete(
+                                PhonesContentProvider.CONTENT_URI,
+                                PhonesContentProvider.Phone.CONTACT_ID + "=" + arguments.getInt("_id"),
                                 null
                         );
 

@@ -17,35 +17,17 @@
             android:padding="15dp"
             android:text="@string/send_location" />
 
-        <Switch
-            android:id="@+id/send_email"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="false"
-            android:enabled="false"
             android:padding="15dp"
-            android:text="@string/send_email" />
-
-        <ListView
-            android:id="@+id/emails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-        <Switch
-            android:id="@+id/send_sms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:enabled="false"
-            android:padding="15dp"
-            android:text="@string/send_sms" />
+            android:text="@string/available_phones"
+            android:textSize="18sp" />
 
         <ListView
             android:id="@+id/phones"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"

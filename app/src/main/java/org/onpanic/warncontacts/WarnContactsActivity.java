@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.onpanic.warncontacts.constants.WarnConstants;
-import org.onpanic.warncontacts.dialogs.ContactActionsDialog;
+import org.onpanic.warncontacts.dialogs.DeleteContactDialog;
 import org.onpanic.warncontacts.fragments.ContactSettings;
 import org.onpanic.warncontacts.fragments.ContactsList;
 import org.onpanic.warncontacts.fragments.LockedByPermissions;
@@ -30,7 +30,7 @@ import org.onpanic.warncontacts.providers.ContactsContentProvider;
 
 public class WarnContactsActivity extends AppCompatActivity implements
         ContactsList.OnContactListener,
-        ContactSettings.OnContacSettingsListener,
+        ContactSettings.OnContactSettingsListener,
         WarnContacsSettings.OnTriggerAppsListener {
 
     private FragmentManager mFragmentManager;
@@ -106,7 +106,9 @@ public class WarnContactsActivity extends AppCompatActivity implements
             case WarnConstants.REQUEST_SMS_PERMISSION: {
                 if (grantResults.length < 1
                         || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    contactSettings.onSendSMSPermissionDenied();
+                    mFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, new LockedByPermissions())
+                            .commit();
                 }
 
                 break;
@@ -178,11 +180,11 @@ public class WarnContactsActivity extends AppCompatActivity implements
 
     @Override
     public void onContactListenerCallback(int id) {
-        ContactActionsDialog dialog = new ContactActionsDialog();
+        DeleteContactDialog dialog = new DeleteContactDialog();
         Bundle arguments = new Bundle();
         arguments.putInt(ContactsContentProvider.Contact._ID, id);
         dialog.setArguments(arguments);
-        dialog.show(getSupportFragmentManager(), "ContactActionsDialog");
+        dialog.show(getSupportFragmentManager(), "DeleteContactDialog");
     }
 
     @Override

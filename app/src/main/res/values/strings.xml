@@ -1,15 +1,11 @@
 <resources>
     <string name="app_name">Warn Contacts</string>
     <string name="action_settings">Settings</string>
-    <string name="send_email">Send e-mail</string>
-    <string name="send_sms">Send SMS</string>
     <string name="send_location">Send location</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
-    <string name="edit">Edit</string>
     <string name="activate">Activate</string>
-    <string name="actions">Actions</string>
     <string name="please_grant_permissions_for_read_contacts">Please grant permissions for read contacts</string>
     <string name="please_grant_permissions_for_get_location">Please grant permissions for get location</string>
     <string name="please_grant_permissions_for_send_sms">Please grant permissions for send SMS</string>
@@ -24,6 +20,7 @@
     <string name="alert_message">Alert Message</string>
     <string name="alert_message_summary">The message send to your contacts</string>
     <string name="alert_message_default">I am in trouble</string>
+    <string name="available_phones">Available phones</string>
 
     <string name="pref_alert_message" translatable="false">pref_alert_message</string>
     <string name="pref_trigger_app" translatable="false">pref_trigger_app</string>
