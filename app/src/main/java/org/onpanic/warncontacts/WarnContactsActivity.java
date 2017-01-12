@@ -36,6 +36,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
     private FragmentManager mFragmentManager;
     private ContactSettings contactSettings;
     private Uri newContact = null;
+    private MenuItem settingsIcon;
 
 
     @Override
@@ -119,6 +120,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_warn_contacs, menu);
+        settingsIcon = menu.findItem(R.id.action_settings);
         return true;
     }
 
@@ -127,6 +129,7 @@ public class WarnContactsActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            settingsIcon.setVisible(false);
             mFragmentManager.beginTransaction()
                     .addToBackStack(null)
                     .replace(R.id.fragment_container, new WarnContacsSettings())
@@ -171,11 +174,16 @@ public class WarnContactsActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (mFragmentManager.getBackStackEntryCount() == 0) {
-            super.onBackPressed();
-        } else {
-            mFragmentManager.popBackStack();
+        switch (mFragmentManager.getBackStackEntryCount()) {
+            case 0:
+                super.onBackPressed();
+                return;
+            case 1:
+                settingsIcon.setVisible(true);
+                break;
         }
+
+        mFragmentManager.popBackStack();
     }
 
     @Override
