@@ -5,9 +5,7 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
-    <string name="edit">Edit</string>
     <string name="activate">Activate</string>
-    <string name="actions">Actions</string>
     <string name="please_grant_permissions_for_read_contacts">Please grant permissions for read contacts</string>
     <string name="please_grant_permissions_for_get_location">Please grant permissions for get location</string>
     <string name="please_grant_permissions_for_send_sms">Please grant permissions for send SMS</string>
