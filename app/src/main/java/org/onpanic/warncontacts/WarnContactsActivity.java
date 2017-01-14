@@ -23,15 +23,13 @@ import org.onpanic.warncontacts.dialogs.DeleteContactDialog;
 import org.onpanic.warncontacts.fragments.ContactSettings;
 import org.onpanic.warncontacts.fragments.ContactsList;
 import org.onpanic.warncontacts.fragments.LockedByPermissions;
-import org.onpanic.warncontacts.fragments.TriggerApps;
 import org.onpanic.warncontacts.fragments.WarnContacsSettings;
 import org.onpanic.warncontacts.permissions.PermissionManager;
 import org.onpanic.warncontacts.providers.ContactsContentProvider;
 
 public class WarnContactsActivity extends AppCompatActivity implements
         ContactsList.OnContactListener,
-        ContactSettings.OnContactSettingsListener,
-        WarnContacsSettings.OnTriggerAppsListener {
+        ContactSettings.OnContactSettingsListener {
 
     private FragmentManager mFragmentManager;
     private ContactSettings contactSettings;
@@ -203,11 +201,6 @@ public class WarnContactsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onContactFinishCallback() {
-        mFragmentManager.popBackStack();
-    }
-
-    @Override
     public void requestLocationPermissions() {
         if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasLocationPermission(this)) {
             PermissionManager.requestLocationPermissions(this, WarnConstants.REQUEST_LOCATION_PERMISSION);
@@ -219,13 +212,5 @@ public class WarnContactsActivity extends AppCompatActivity implements
         if (PermissionManager.isLollipopOrHigher() && !PermissionManager.hasSendSMSPermission(this)) {
             PermissionManager.requestSendSMSPermissions(this, WarnConstants.REQUEST_SMS_PERMISSION);
         }
-    }
-
-    @Override
-    public void onTriggerAppsCallback() {
-        mFragmentManager.beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.fragment_container, new TriggerApps())
-                .commit();
     }
 }

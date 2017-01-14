@@ -1,6 +1,7 @@
 package org.onpanic.warncontacts.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -34,13 +35,14 @@ public class ContactSettings extends Fragment {
     private ContentResolver cr;
     private Boolean isValid = false;
     private PhonesAdapter phonesAdapter;
+    private FragmentManager mFragmentManager;
 
     private View.OnClickListener saveButtonClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             ArrayList<String> checked_phones;
 
-            if (!isValid) mListener.onContactFinishCallback();
+            if (!isValid) mFragmentManager.popBackStack();
 
             checked_phones = phonesAdapter.getSelectedString();
 
@@ -61,7 +63,7 @@ public class ContactSettings extends Fragment {
 
             }
 
-            mListener.onContactFinishCallback();
+            mFragmentManager.popBackStack();
         }
     };
 
@@ -106,7 +108,7 @@ public class ContactSettings extends Fragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onContactFinishCallback();
+                mFragmentManager.popBackStack();
             }
         });
 
@@ -150,6 +152,7 @@ public class ContactSettings extends Fragment {
 
         mContext = context;
         cr = mContext.getContentResolver();
+        mFragmentManager = getFragmentManager();
 
         if (context instanceof OnContactSettingsListener) {
             mListener = (OnContactSettingsListener) context;
@@ -171,8 +174,6 @@ public class ContactSettings extends Fragment {
     }
 
     public interface OnContactSettingsListener {
-        void onContactFinishCallback();
-
         void requestLocationPermissions();
 
         void requestSendSMSPermissions();
