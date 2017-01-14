@@ -18,7 +18,7 @@ public class ContactsDB extends SQLiteOpenHelper {
                     "contact_id TEXT, " +
                     "contact_name TEXT, " +
                     "enabled INTEGER DEFAULT 1, " +
-                    "send_position INTEGER DEFAULT 0;";
+                    "send_position INTEGER DEFAULT 0);";
 
     private static final String PHONES_TABLE_CREATE =
             "CREATE TABLE " + PHONES_TABLE_NAME + " (" +
