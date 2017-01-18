@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import org.onpanic.warncontacts.R;
 import org.onpanic.warncontacts.adapters.ContactsAdapter;
 import org.onpanic.warncontacts.providers.ContactsContentProvider;
+import org.onpanic.warncontacts.ui.SimpleDividerItemDecoration;
 
 public class ContactsList extends Fragment {
     private ContentResolver mContentResolver;
@@ -45,6 +46,9 @@ public class ContactsList extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts_list, container, false);
         RecyclerView list = (RecyclerView) view.findViewById(R.id.contact_list);
+        list.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        list.addItemDecoration(new SimpleDividerItemDecoration(mContext));
+        list.setHasFixedSize(true); // does not change, except in onResume(
 
         mFab = (FloatingActionButton) view.findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
